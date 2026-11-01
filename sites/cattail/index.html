@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7efe1">
+<meta name="description" content="貓尾草｜FFXIV 貓咪互動主題店。沒有指名，只有自由活動的貓咪與不期而遇的緣分。">
+<title>貓尾草｜CATTAIL</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap');
+:root{--paper:#faf4e9;--cream:#fffaf2;--ink:#374139;--sub:#677568;--green:#638674;--dark:#3d5b4b;--leaf:#e3ebdb;--line:#dcdccc;--amber:#b97d47;--pink:#f7e1d8}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans","Noto Sans TC",sans-serif;line-height:1.8}button,a{font:inherit}a{color:inherit;text-decoration:none}button{cursor:pointer}::selection{background:#b9d2ae}
+.wrapper{width:min(1140px,calc(100% - 42px));margin-inline:auto}
+header{position:sticky;top:0;z-index:30;background:#faf4e9ed;backdrop-filter:blur(14px);border-bottom:1px solid #ddd9cd}.nav{height:74px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:11px;font-size:21px;font-weight:800;letter-spacing:.08em}.brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:45% 55% 49% 51%;background:var(--dark);color:#fff;font-size:21px}.nav-links{display:flex;gap:27px;align-items:center;font-size:13px;font-weight:700}.nav-links a:hover{color:var(--green)}.nav .pill{background:var(--dark);color:#fff;padding:10px 18px;border-radius:99px}.mobile-toggle{display:none;border:0;background:transparent;font-size:25px;color:var(--dark)}
+.hero{position:relative;overflow:hidden;background:radial-gradient(circle at 83% 16%,#f4dec1 0,transparent 28%),linear-gradient(120deg,#f7ecd9,#f8f4e9 70%);padding:88px 0 90px}.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:45px}.eyebrow{font-size:12px;letter-spacing:.25em;font-weight:800;color:var(--green);text-transform:uppercase}.hero h1{font-size:clamp(52px,8vw,94px);line-height:1.2;letter-spacing:.12em;margin:19px 0 8px;color:var(--dark)}.hero .english{font-family:Georgia,serif;font-weight:400;font-style:italic;letter-spacing:.18em;font-size:22px;color:var(--amber)}.hero p{max-width:520px;color:#657567;font-size:17px;line-height:2}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:47px;padding:10px 23px;border-radius:99px;font-size:14px;font-weight:800;border:1px solid var(--dark);transition:.2s}.btn.primary{background:var(--dark);color:#fff}.btn.secondary{background:transparent;color:var(--dark)}.btn:hover{transform:translateY(-2px)}.hero-art{position:relative;min-height:370px;display:grid;place-items:center}.art-circle{width:min(100%,380px);aspect-ratio:1;border-radius:50%;background:#dce7ce;display:grid;place-items:center;box-shadow:inset 0 0 0 18px #eaf0dd;position:relative}.cat-illustration{font-size:clamp(130px,19vw,205px);line-height:1;filter:drop-shadow(0 10px 0 #b9cba9)}.art-circle:before,.art-circle:after{content:"✿";position:absolute;font-size:52px;color:#f2ba93}.art-circle:before{left:-19px;bottom:37px}.art-circle:after{right:-15px;top:40px;font-size:38px}.hero-sticker{position:absolute;bottom:4%;right:0;background:#fff9ef;border:1px solid #d8d7c7;box-shadow:0 10px 30px #48594518;padding:13px 20px;border-radius:18px;font-size:13px;transform:rotate(6deg)}
+.section{padding:88px 0}.section.alt{background:#fffaf3}.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:32px}.section h2{font-size:clamp(29px,4vw,43px);line-height:1.3;color:var(--dark);margin:8px 0}.section-desc{color:var(--sub);font-size:14px;max-width:520px}.section-head .decor{font-family:Georgia,serif;font-style:italic;font-size:15px;color:var(--amber)}
+.corner-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.corner{padding:29px 24px;border:1px solid #e2e1d4;border-radius:22px;background:#fffdf7;min-height:259px}.corner .symbol{font-size:40px;display:block;margin-bottom:15px}.corner h3{font-size:20px;color:var(--dark);margin:0 0 8px}.corner p{font-size:14px;color:var(--sub);margin:0}.corner:nth-child(2){background:#f5eee0}.corner:nth-child(3){background:#f0f3e9}.corner:nth-child(4){background:#f7eae7}
+.filter-bar{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 25px}.filter{border:1px solid #d3d8c9;background:#fffdf7;padding:8px 16px;border-radius:99px;font-size:13px;font-weight:700;color:var(--dark)}.filter.active,.filter:hover{background:var(--dark);border-color:var(--dark);color:white}.filter:focus-visible,.btn:focus-visible,a:focus-visible{outline:3px solid #c88a4f;outline-offset:3px}.trait-explainer{display:flex;align-items:start;gap:12px;background:#edf1e7;padding:14px 19px;border-radius:14px;font-size:14px;color:#506853;margin-bottom:25px}.trait-explainer strong{white-space:nowrap}
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.empty{grid-column:1/-1;background:repeating-linear-gradient(135deg,#fcfaf2,#fcfaf2 14px,#f8f5ed 14px,#f8f5ed 28px);border:1px dashed #bac8ad;border-radius:22px;min-height:235px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:35px}.empty .big{font-size:55px}.empty h3{margin:10px 0 3px;color:var(--dark)}.empty p{font-size:14px;color:var(--sub);margin:0}.cat-card{background:#fff;border:1px solid #e0dfd1;border-radius:22px;overflow:hidden}.cat-image{aspect-ratio:4/3;background:#e7eede;display:grid;place-items:center;font-size:65px}.cat-body{padding:19px}.cat-body h3{margin:0}.cat-body p{font-size:14px;color:var(--sub)}.tags{display:flex;gap:7px;flex-wrap:wrap}.tag{background:#e8eee3;color:#54715c;font-size:12px;border-radius:99px;padding:3px 10px}.cat-details{margin-top:16px;border:0;border-radius:8px;background:#e3ebdf;color:var(--dark);padding:8px 15px;font-weight:700}
+.entry-banner{margin-top:18px;padding:24px 30px;background:var(--dark);color:#fff;border-radius:20px;display:flex;justify-content:space-between;align-items:center;gap:15px}.entry-banner strong{font-size:22px}.entry-banner small{display:block;color:#dbeddf;font-size:13px}.entry-price{font-size:29px;font-weight:800;white-space:nowrap}.entry-price span{font-size:14px;font-weight:500}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.menu-panel{background:#fff;border:1px solid #e3e0d6;border-radius:22px;padding:28px}.menu-panel h3{margin:0 0 15px;color:var(--dark);font-size:20px}.menu-panel.wide{grid-column:1/-1}.menu-item{padding:17px 0;border-top:1px dashed #dadbd0;display:grid;grid-template-columns:1fr auto;gap:12px}.menu-item strong{font-size:15px}.menu-item p{margin:5px 0 0;color:var(--sub);font-size:13px}.menu-item .price{color:var(--amber);font-size:15px;font-weight:800;white-space:nowrap}.menu-note{background:#f4f1e8;border-radius:13px;padding:16px 18px;margin-top:17px;color:#6b705f;font-size:13px}
+.behaviors{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.behavior{display:flex;gap:16px;align-items:start;padding:20px;background:#fffdf8;border:1px solid #e4e3d6;border-radius:16px;font-size:14px}.behavior .num{display:grid;place-items:center;flex:none;border-radius:50%;width:32px;height:32px;background:#dfe8d7;color:var(--dark);font-weight:800}
+.rules{counter-reset:rules;display:grid;grid-template-columns:1fr 1fr;gap:12px}.rule{padding:18px 20px;border-radius:14px;border:1px solid #e0ded0;background:#fffdf7;font-size:14px;display:flex;gap:15px}.rule:before{counter-increment:rules;content:counter(rules,decimal-leading-zero);font-family:Georgia,serif;color:var(--amber);font-weight:bold;font-size:20px;line-height:1.3}
+footer{background:#354f42;color:#e6eede;padding:54px 0 35px}.footer-grid{display:flex;justify-content:space-between;gap:25px;align-items:start}.footer-logo{font-size:28px;font-weight:800}.footer-note{color:#c0d2c3;font-size:13px}.footer-link{font-size:13px;text-decoration:underline;text-underline-offset:4px}.copyright{border-top:1px solid #5c7060;margin-top:35px;padding-top:18px;font-size:12px;color:#acbcae}
+dialog{border:none;border-radius:22px;max-width:520px;width:calc(100% - 30px);padding:28px;background:#fffaf2;color:var(--ink);box-shadow:0 20px 70px #0004}dialog::backdrop{background:#233327a8}dialog button{float:right;border:0;background:var(--dark);color:#fff;border-radius:30px;padding:8px 16px}
+@media(max-width:900px){.corner-grid{grid-template-columns:repeat(2,1fr)}.hero-grid{gap:15px}.hero-art{min-height:300px}.nav-links{gap:14px}}@media(max-width:690px){.wrapper{width:min(100% - 30px,1140px)}.nav{height:65px}.mobile-toggle{display:block}.nav-links{display:none;position:absolute;top:65px;left:0;right:0;background:var(--paper);padding:19px;flex-direction:column;align-items:stretch;border-bottom:1px solid #ddd}.nav-links.open{display:flex}.hero{padding:54px 0 45px}.hero-grid{grid-template-columns:1fr}.hero-art{min-height:230px;order:-1}.art-circle{width:210px}.cat-illustration{font-size:115px}.hero-sticker{right:10%;bottom:1%;font-size:11px}.hero h1{font-size:58px}.hero p{font-size:15px}.section{padding:62px 0}.section-head{display:block}.section-head .decor{display:none}.corner-grid,.menu-grid,.behaviors,.rules,.cats{grid-template-columns:1fr}.corner{min-height:auto;padding:23px}.menu-panel.wide{grid-column:auto}.menu-panel{padding:21px}.menu-item{grid-template-columns:1fr}.menu-item .price{margin-top:-5px}.entry-banner{align-items:start;flex-direction:column}.entry-price{font-size:24px}.footer-grid{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+<header><div class="wrapper nav"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">🐾</span><span>貓尾草</span></a><button class="mobile-toggle" aria-label="展開選單" aria-expanded="false" id="menu-toggle">☰</button><nav class="nav-links" id="nav-links" aria-label="主要導覽"><a href="#corners">店裡的四個角落</a><a href="#cats">貓咪名簿</a><a href="#services">消費項目</a><a href="#rules">入店須知</a><a class="pill" href="#notice">最新公告</a></nav></div></header>
+<main id="top">
+<section class="hero"><div class="wrapper hero-grid"><div><div class="eyebrow">A LITTLE PLACE FOR CAT ENCOUNTERS</div><h1>貓尾草</h1><div class="english">CATTAIL · Cat Interaction Lounge</div><p>有的貓咪喜歡撒嬌，有的偏愛獨處，也有些總在惡作劇。來到貓尾草，不必挑選誰，跟著貓咪的腳步，讓每場相遇自然發生。</p><div class="hero-actions"><a class="btn primary" href="#cats">認識店裡的貓咪 ↗</a><a class="btn secondary" href="#services">看看消費項目</a></div></div><div class="hero-art" aria-hidden="true"><div class="art-circle"><span class="cat-illustration">🐈</span></div><div class="hero-sticker">✿ 無指名服務・自由相遇</div></div></div></section>
+<section class="section" id="corners"><div class="wrapper"><div class="section-head"><div><div class="eyebrow">THE FOUR CORNERS</div><h2>店裡的四個角落</h2><p class="section-desc">每個角落都有不同的步調，找到適合自己的位置，享受與貓咪相處的時間。</p></div><div class="decor">Make yourself at home.</div></div><div class="corner-grid">
+<article class="corner"><span class="symbol">🛎️</span><h3>櫃台</h3><p>想購買項目或周邊，到櫃檯找接待喵就對了！</p></article>
+<article class="corner"><span class="symbol">🧶</span><h3>玩樂區</h3><p>互動感強烈，撲、抓、追逐都可能發生，這裡玩得比較野，踏進來前先做好心理準備喔！</p></article>
+<article class="corner"><span class="symbol">🍵</span><h3>喝茶區</h3><p>安靜喝茶、聊天，這裡的貓咪性格溫和，只想蹭蹭你、討摸摸。</p></article>
+<article class="corner"><span class="symbol">🩹</span><h3>醫護站</h3><p>手上有被抓咬的痕跡嗎？來這裡讓貓咪小護士幫你包紮一下。</p></article>
+</div></div></section>
+<section class="section alt" id="cats"><div class="wrapper"><div class="section-head"><div><div class="eyebrow">MEET OUR CATS</div><h2>貓咪名簿</h2><p class="section-desc">點選標籤，找找自己喜歡的貓咪性格。貓咪自由活動，不提供指名。</p></div><div class="decor">Every cat has a story.</div></div><div class="filter-bar" id="filters" aria-label="依貓咪性格篩選"></div><div class="trait-explainer" aria-live="polite"><strong id="trait-title">全部</strong><span id="trait-description">查看店內所有貓咪，讓緣分自己決定。</span></div><div class="cats" id="cat-list" aria-live="polite"></div></div></section>
+<section class="section" id="services"><div class="wrapper"><div class="section-head"><div><div class="eyebrow">MENU & SERVICES</div><h2>消費項目</h2><p class="section-desc">所有價格單位均為遊戲內 Gil。部分服務依貓咪的個性及現場情況提供。</p></div></div>
+<div class="entry-banner"><div><small>入場費 · ENTRY</small><strong>入場即含當日套餐一份</strong><small>於店外向喵衛支付</small></div><div class="entry-price">50,000 <span>Gil</span></div></div>
+<div class="menu-grid" style="margin-top:22px"><div class="menu-panel"><h3>🐾 貓咪互動服務</h3>
+<div class="menu-item"><div><strong>小魚乾</strong><p>投餵給貓咪也許能增進感情，但請勿將店內貓咪餵成卡車。</p></div><span class="price">30,000 Gil</span></div>
+<div class="menu-item"><div><strong>貓咪交響樂</strong><p>貓咪會在你身旁大聲嚎叫，音量與時長依貓咪心情而定。</p></div><span class="price">100,000 Gil</span></div>
+<div class="menu-item"><div><strong>特殊服務</strong><p>僅限部分貓咪提供，每隻內容不同。詳情請查看貓咪名簿。</p></div><span class="price">300,000 Gil</span></div>
+<div class="menu-item"><div><strong>吸貓派對</strong><p>購買後請先與櫃台確認想站的位置。櫃台會宣布你「身上噴了貓草香水！」，貓咪們就會圍到你身邊。香氣有時效性，會慢慢散去。</p></div><span class="price">500,000 Gil</span></div>
+</div><div class="menu-panel"><h3>💚 醫護站服務</h3>
+<div class="menu-item"><div><strong>傷口包紮</strong><p>被貓咪抓咬弄傷了嗎？來這裡讓我們細心包紮治癒您。</p></div><span class="price">100,000 Gil</span></div>
+<div class="menu-item"><div><strong>喵喵健康針</strong><p>主要提供給店內貓咪施打的健康針劑，如果你想讓你的貓咪朋友一起打，也一樣歡迎購買。</p></div><span class="price">300,000 Gil</span></div>
+<h3 style="margin-top:28px">📸 周邊商品・現場拍攝</h3>
+<div class="menu-item"><div><strong>與貓咪合照</strong><p>基礎一隻貓咪，每多加一隻貓咪 +50,000 Gil。</p></div><span class="price">300,000 Gil</span></div>
+<div class="menu-note"><strong>取照方式</strong><div>於 Discord 群內領取照片。若不希望照片公開於群內，請告知攝影的店員。</div></div>
+</div></div></div></section>
+<section class="section alt" id="behaviors"><div class="wrapper"><div class="section-head"><div><div class="eyebrow">THE CAT EXPERIENCE</div><h2>貓咪可能觸發的行為</h2><p class="section-desc">每次相遇都有驚喜，以下都是店內有可能發生的互動。</p></div></div><div class="behaviors">
+<div class="behavior"><span class="num">1</span><span>玩樂區的貓咪比較調皮，可能會抓傷你、突然衝過來或跳到你身上，甚至趁機叼走你的點心。</span></div>
+<div class="behavior"><span class="num">2</span><span>喝茶區的貓咪個性安靜許多，歡迎輕輕撫摸。</span></div>
+<div class="behavior"><span class="num">3</span><span>點了貓咪交響樂時，附近的貓咪可能會忍不住跟著合唱，純屬牠們的社交禮儀。</span></div>
+<div class="behavior"><span class="num">4</span><span>部分貓咪對小魚乾特別沒有抵抗力，可能會立刻衝過來討食，請小心手上的道具。</span></div>
+</div></div></section>
+<section class="section" id="rules"><div class="wrapper"><div class="section-head"><div><div class="eyebrow">HOUSE RULES</div><h2>客人需遵守事項</h2><p class="section-desc">請一起維護讓貓咪和每位來客都能安心相處的環境。</p></div></div><div class="rules">
+<div class="rule">本店為純粹的貓咪互動空間，客人不需要進行角色扮演即可入店。</div>
+<div class="rule">入店前請先收起武器與寵物，店內請勿奔跑，避免驚擾貓咪。</div>
+<div class="rule">請尊重每一隻貓咪的意願，不強迫牠們與你互動或觸摸。</div>
+<div class="rule">貓咪就是貓咪，請勿對牠們有任何不當、色情意圖的言行。</div>
+<div class="rule">請勿餵食店內提供以外的食物或異物給貓咪，維護牠們的健康。</div>
+<div class="rule">請勿追逐、抱起或強行帶離貓咪，讓牠們保有自由活動的空間。</div>
+<div class="rule">歡迎自由拍照，但請隱藏角色ID。若想與貓咪合影，請購買店內的拍攝服務。直播或錄影請先向櫃台詢問。</div>
+<div class="rule">如有任何不當言行，店家保留請客人離場的權利，以保障貓咪與其他客人的安全。</div>
+<div class="rule">營業時間、地點與最新公告，請見 Discord 公告。</div>
+</div></div></section>
+</main>
+<footer id="notice"><div class="wrapper"><div class="footer-grid"><div><div class="footer-logo">🐾 貓尾草</div><p class="footer-note">沒有指名，只有相遇。<br>營業時間、地點與最新公告請以 Discord 為準。</p></div><div><div class="eyebrow" style="color:#c0d6c2">NOTICE</div><p class="footer-note">Discord 邀請連結尚待提供<br>正式開放後將於此處顯示。</p></div></div><div class="copyright">© 貓尾草 CATTAIL · FFXIV fan-made venue site · Independent prototype</div></div></footer>
+<dialog id="cat-dialog"><button id="close-dialog">關閉 ✕</button><h2 id="dialog-title"></h2><div id="dialog-body"></div></dialog>
+<script>
+const traits=[
+["全部","查看店內所有貓咪，讓緣分自己決定。"],
+["撒嬌","喜歡窩在你身邊，摸久了會發出呼嚕聲，是最容易黏上人的貓咪。"],
+["高冷","不太主動，但願意讓你靜靜坐在旁邊，需要耐心對待。"],
+["調皮","偶爾會抓一下、咬一下純屬玩鬧，互動非常有隨機感。"],
+["貪吃","看到小魚乾就衝過來，是最容易被食物吸引的貓咪。"],
+["好奇","對任何新奇的東西都充滿興趣，可能會一直盯著你的隨身物品。"],
+["傲嬌","嘴上嫌你煩，尾巴卻誠實地繞著你的手，偶爾會輕咬一口。"],
+["健談","很愛用叫聲跟你聊天，彷彿在回應你說的每一句話。"],
+["療癒","擁有治療傷口的能力，是在醫護站內的小天使貓咪。"],
+["特殊服務","只有特定貓咪提供的專屬服務，每隻內容不同，點開貓咪卡片查看詳情。"]
+];
+// 填入真實貓咪資料即可啟用卡片與篩選。
+// Example schema: {name:"貓名",tags:["撒嬌","貪吃"],intro:"介紹",specialService:"特殊服務說明或留空",image:"assets/xxx.webp"}
+const cats=[];
+const filters=document.getElementById("filters"),list=document.getElementById("cat-list");
+const title=document.getElementById("trait-title"),description=document.getElementById("trait-description");
+const dialog=document.getElementById("cat-dialog");
+let selected="全部";
+function render(){
+ filters.replaceChildren();
+ traits.forEach(([tag,desc])=>{const b=document.createElement("button");b.type="button";b.className="filter"+(selected===tag?" active":"");b.textContent=tag;b.setAttribute("aria-pressed",String(selected===tag));b.addEventListener("click",()=>{selected=tag;render()});filters.append(b)});
+ const item=traits.find(([x])=>x===selected);title.textContent=item[0];description.textContent=item[1];
+ list.replaceChildren();
+ const matching=cats.filter(cat=>selected==="全部"||(selected==="特殊服務"?Boolean(cat.specialService):cat.tags.includes(selected)));
+ if(!matching.length){const el=document.createElement("div");el.className="empty";el.innerHTML='<div class="big" aria-hidden="true">🐾</div><h3>貓咪名簿準備中</h3><p>貓咪照片與個別資料尚待登錄。請稍後再來認識牠們。</p>';list.append(el);return}
+ matching.forEach(cat=>{
+ const card=document.createElement("article");card.className="cat-card";
+ const image=document.createElement("div");image.className="cat-image";
+ if(cat.image){const img=document.createElement("img");img.src=cat.image;img.alt=cat.name;img.loading="lazy";img.style.cssText="width:100%;height:100%;object-fit:cover";image.append(img)}else image.textContent="🐈";
+ const body=document.createElement("div");body.className="cat-body";
+ const name=document.createElement("h3");name.textContent=cat.name;
+ const tags=document.createElement("div");tags.className="tags";(cat.tags||[]).forEach(t=>{const chip=document.createElement("span");chip.className="tag";chip.textContent=t;tags.append(chip)});
+ if(cat.specialService){const chip=document.createElement("span");chip.className="tag";chip.textContent="特殊服務";tags.append(chip)}
+ const intro=document.createElement("p");intro.textContent=cat.intro||"";
+ const button=document.createElement("button");button.className="cat-details";button.textContent="查看貓咪介紹 →";button.addEventListener("click",()=>{document.getElementById("dialog-title").textContent=cat.name;const detail=document.getElementById("dialog-body");detail.replaceChildren();const p=document.createElement("p");p.textContent=cat.intro||"";detail.append(p);if(cat.specialService){const h=document.createElement("h3");h.textContent="特殊服務";const s=document.createElement("p");s.textContent=cat.specialService;detail.append(h,s)}dialog.showModal()});
+ body.append(name,tags,intro,button);card.append(image,body);list.append(card);
+ })
+}
+render();
+document.getElementById("close-dialog").addEventListener("click",()=>dialog.close());
+const menuToggle=document.getElementById("menu-toggle"),nav=document.getElementById("nav-links");
+menuToggle.addEventListener("click",()=>{const open=nav.classList.toggle("open");menuToggle.setAttribute("aria-expanded",String(open))});
+nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{nav.classList.remove("open");menuToggle.setAttribute("aria-expanded","false")}));
+</script>
+</body></html>
