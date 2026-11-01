@@ -119,6 +119,46 @@ dialog{border:none;border-radius:22px;max-width:520px;width:calc(100% - 30px);pa
 @media(max-width:860px){.cat-book{--bookmark-width:87px}.cat-book-tabs{gap:7px}}
 @media(max-width:550px){.cat-book{--bookmark-width:68px}.cat-book-tabs{gap:6px;padding-top:23px}}
 @media(prefers-reduced-motion:reduce){.cat-book-tabs,.cat-book-stage{transition:none!important}.cat-book-page.flipping-ltr .page-flip-overlay,.cat-book-page.flipping-rtl .page-flip-overlay,.cat-book-page.flipping-ltr .page-content,.cat-book-page.flipping-rtl .page-content{animation:none!important}}
+
+/* Physical two-page book: each bookmark is part of an individual leaf. */
+.physical-book{--tabW:76px;max-width:1140px;margin:36px auto 0;padding:0 var(--tabW);overflow:visible}
+.book-spread{position:relative;width:100%;height:610px;perspective:1800px;overflow:visible;isolation:isolate;filter:drop-shadow(0 15px 16px #544c3c21)}
+.book-spread:before{content:"";position:absolute;inset:-5px -5px -7px;border-radius:12px 22px 22px 12px;background:#e6dbcb;box-shadow:0 5px #cfc2ae,0 8px #f7ead7;z-index:-1}
+.book-base{position:absolute;top:0;bottom:0;width:50%;background:linear-gradient(95deg,#f8f2e8,#fffdf7 18%,#fffaf0);border:1px solid #d9d3c5;overflow:hidden}
+.book-base-left{left:0;border-radius:13px 0 0 13px}
+.book-base-right{right:0;border-radius:0 18px 18px 0;padding:35px;background:linear-gradient(100deg,#efe7da,#fffdf6 11%,#fffaf1)}
+.book-sheets{position:absolute;inset:0;z-index:2;pointer-events:none}
+.book-leaf{position:absolute;left:0;top:0;width:50%;height:100%;transform-origin:right center;transform:rotateY(0deg);transform-style:preserve-3d;transition:transform .68s cubic-bezier(.37,.03,.63,1);pointer-events:none;will-change:transform}
+.book-leaf.turned{transform:rotateY(180deg)}
+.leaf-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:visible;border:1px solid #ddd3c4;background:linear-gradient(100deg,#fffdf7,#fcf8ee 76%,#e9e0d1 100%);box-shadow:inset -10px 0 15px #7b695315}
+.leaf-front{border-radius:12px 3px 3px 12px}
+.leaf-back{transform:rotateY(180deg);background:linear-gradient(90deg,#e9e0d1,#fffdf7 13%,#faf4eb);border-radius:3px 18px 18px 3px;box-shadow:inset 11px 0 16px #7b695316}
+.book-leaf-content{height:100%;min-width:0;padding:31px 29px 35px;overflow:auto;scrollbar-width:thin;pointer-events:auto}
+.book-page-heading{margin-bottom:25px;font-size:10px}
+.book-trait-heading{padding:14px 16px;background:#eef2e9;border-radius:12px;margin-bottom:22px}
+.book-trait-heading h3{margin:0 0 2px;color:var(--dark);font-size:19px}
+.book-trait-heading p{margin:0;font-size:12px;color:var(--sub);line-height:1.7}
+.book-cat-list{display:grid;grid-template-columns:1fr;gap:14px}
+.book-cat-list .empty{min-height:215px;padding:18px;background:#faf7ef}
+.book-cat-list .empty h3{font-size:17px}.book-cat-list .empty p{font-size:12px}
+.book-cat-list .cat-image{aspect-ratio:3/2}.book-cat-list .cat-body{padding:15px}
+.book-back-content{height:calc(100% - 70px);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px 12px;color:var(--dark)}
+.book-back-content h3{font-size:clamp(24px,3vw,38px);margin:12px 0}
+.book-back-content p{font-size:15px;line-height:2;max-width:300px;color:var(--sub)}
+.book-paw{font-size:45px;opacity:.6;margin-top:22px}
+.book-center-spine{position:absolute;top:0;bottom:0;left:calc(50% - 7px);width:14px;background:linear-gradient(90deg,#52463800,#5f554b23 45%,#fffdf6a8 70%,transparent);pointer-events:none;z-index:160}
+.bound-tab{--tab-color:#e2e6df;position:absolute;top:calc(26px + var(--tab-index) * 53px);width:var(--tabW);height:44px;z-index:1;padding:0 8px;border:1px solid #b9b9ad;color:#395b4b;background:linear-gradient(120deg,#ffffff92,var(--tab-color) 70%);font-weight:800;font-size:13px;letter-spacing:.025em;pointer-events:auto;box-shadow:0 3px 7px #3b4c392a;transition:filter .18s ease}
+.bound-tab-left{left:calc(-1 * var(--tabW) + 8px);border-radius:11px 3px 3px 11px;border-right:0}
+.bound-tab-right{right:calc(-1 * var(--tabW) + 8px);border-radius:3px 11px 11px 3px;border-left:0}
+.bound-tab:hover{filter:brightness(1.07)}
+.current-leaf .bound-tab-left{background:linear-gradient(120deg,#587d68,#3d5b4b);color:#fff}
+.book-leaf.in-motion .leaf-face{box-shadow:inset -10px 0 18px #61513b27,0 8px 22px #574d3e30}
+.book-leaf.in-motion:before{content:"";position:absolute;inset:0;background:#39302124;z-index:1;pointer-events:none;animation:turnShade .68s ease both}
+@keyframes turnShade{0%,100%{opacity:0}50%{opacity:1}}
+.book-help{text-align:center;margin:22px 0 0;color:var(--sub);font-size:12px}
+@media(max-width:850px){.physical-book{--tabW:61px;padding:0 var(--tabW)}.book-spread{height:560px}.book-leaf-content,.book-base-right{padding:22px 15px}.bound-tab{height:40px;top:calc(20px + var(--tab-index) * 49px);font-size:11px}.book-page-heading{font-size:9px;letter-spacing:0}.book-trait-heading{padding:10px}.book-trait-heading h3{font-size:17px}.book-trait-heading p{font-size:11px}}
+@media(max-width:600px){.physical-book{--tabW:42px;padding:0 var(--tabW)}.book-spread{height:550px}.book-leaf-content{padding:19px 9px;overflow:auto}.book-base-right{padding:17px 8px}.book-page-heading{font-size:8px;gap:4px;margin-bottom:12px}.book-trait-heading{padding:8px;margin-bottom:12px}.book-trait-heading h3{font-size:14px}.book-trait-heading p{font-size:10px;line-height:1.5}.book-cat-list .empty{min-height:200px;padding:8px}.book-cat-list .empty .big{font-size:32px}.book-cat-list .empty h3{font-size:13px}.book-cat-list .empty p{font-size:10px}.bound-tab{height:39px;top:calc(18px + var(--tab-index) * 48px);font-size:10px;padding:0 1px;writing-mode:vertical-rl;letter-spacing:0}.book-back-content h3{font-size:20px}.book-back-content p{font-size:11px;line-height:1.6}.book-paw{font-size:25px}.book-cat-list .cat-body{padding:9px}.book-cat-list .cat-body h3{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.book-leaf{transition:none!important}.book-leaf.in-motion:before{animation:none!important}}
 </style>
 </head>
 <body>
@@ -143,16 +183,18 @@ dialog{border:none;border-radius:22px;max-width:520px;width:calc(100% - 30px);pa
 </div></div></section>
 <section class="section alt" id="cats"><div class="wrapper">
 <div class="section-head"><div><div class="eyebrow">MEET OUR CATS</div><h2>貓咪名簿</h2><p class="section-desc">點選左側書籤，翻閱不同個性的貓咪。貓咪自由活動，不提供指名。</p></div><div class="decor">Every cat has a story.</div></div>
-<div class="cat-book" id="cat-book" data-side="left">
-<nav class="cat-book-tabs" id="filters" aria-label="貓咪性格書籤"></nav>
-<div class="cat-book-stage">
-<div class="cat-book-page" id="cat-book-page">
-<div class="book-spine" aria-hidden="true"></div><div class="page-flip-overlay" id="page-flip-overlay" aria-hidden="true"><span class="flip-paper-back"></span></div>
-<div class="page-content" id="page-content">
-<div class="book-page-heading"><span>CATTAIL · CAT DIRECTORY</span><span id="book-page-number">P.01 / 10</span></div>
-<div class="trait-explainer book-explainer" aria-live="polite"><strong id="trait-title">全部</strong><span id="trait-description">查看店內所有貓咪，讓緣分自己決定。</span></div>
-<div class="cats" id="cat-list" aria-live="polite"></div>
-</div></div></div></div>
+<div class="physical-book" id="cat-book" aria-label="可翻頁貓咪名簿">
+  <div class="book-spread" id="book-spread">
+    <div class="book-base book-base-left" aria-hidden="true"></div>
+    <div class="book-base book-base-right">
+      <div class="book-page-heading"><span>CATTAIL · CAT DIRECTORY</span><span>P.01 / 10</span></div>
+      <div class="book-back-content"><span class="eyebrow">CHAPTER 01</span><h3>全部</h3><p>查看店內所有貓咪，讓緣分自己決定。</p><span class="book-paw" aria-hidden="true">🐾</span></div>
+    </div>
+    <div class="book-sheets" id="book-sheets"></div>
+    <div class="book-center-spine" aria-hidden="true"></div>
+  </div>
+  <p class="book-help">點選書頁邊緣的彩色索引籤，逐頁翻閱貓咪名簿</p>
+</div>
 </div></section>
 <section class="section" id="services"><div class="wrapper"><div class="section-head"><div><div class="eyebrow">MENU & SERVICES</div><h2>消費項目</h2><p class="section-desc">所有價格單位均為遊戲內 Gil。部分服務依貓咪的個性及現場情況提供。</p></div></div>
 <div class="entry-banner"><div><small>入場費 · ENTRY</small><strong>入場即含當日套餐一份</strong><small>於店外向喵衛支付</small></div><div class="entry-price">50,000 <span>Gil</span></div></div>
@@ -204,74 +246,127 @@ const traits=[
 // 填入真實貓咪資料即可啟用卡片與篩選。
 // Example schema: {name:"貓名",tags:["撒嬌","貪吃"],intro:"介紹",specialService:"特殊服務說明或留空",image:"assets/xxx.webp"}
 const cats=[];
-const filters=document.getElementById("filters"),list=document.getElementById("cat-list");
-const title=document.getElementById("trait-title"),description=document.getElementById("trait-description");
+
 const dialog=document.getElementById("cat-dialog");
-let selected="全部";
-const catBook=document.getElementById("cat-book");
-const bookPage=document.getElementById("cat-book-page");
-const pageCounter=document.getElementById("book-page-number");
-const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
-let bookSide="left";
-let isPageTurning=false;
-let pageSwapTimer=null,pageEndTimer=null;
-function positionBoundBookmarks(){
- const travel=Math.max(0,catBook.clientWidth-parseFloat(getComputedStyle(catBook).getPropertyValue("--bookmark-width")));
- catBook.style.setProperty("--book-travel",travel+"px");
+const bookSheets=document.getElementById("book-sheets");
+const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
+let currentChapter=0;
+let bookBusy=false;
+const physicalLeaves=[];
+const leafColors=["#dfe6de","#efd7d7","#d7e5eb","#f5ddbf","#f2e8c5","#d9e9d7","#e6d8e9","#d9e8f0","#d9e9e0","#ebdfbe"];
+function catCards(category){
+ const wrap=document.createElement("div");
+ wrap.className="cats book-cat-list";
+ const matches=cats.filter(cat=>category==="全部"||(category==="特殊服務"?Boolean(cat.specialService):(cat.tags||[]).includes(category)));
+ if(!matches.length){
+  const empty=document.createElement("div");
+  empty.className="empty";
+  empty.innerHTML='<div class="big" aria-hidden="true">🐾</div><h3>貓咪名簿準備中</h3><p>貓咪照片與個別資料尚待登錄。請稍後再來認識牠們。</p>';
+  wrap.append(empty);return wrap;
+ }
+ for(const cat of matches){
+  const card=document.createElement("article");card.className="cat-card";
+  const image=document.createElement("div");image.className="cat-image";
+  if(cat.image){const img=document.createElement("img");img.src=cat.image;img.alt=cat.name;img.loading="lazy";img.style.cssText="width:100%;height:100%;object-fit:cover";image.append(img)}
+  else image.textContent="🐈";
+  const body=document.createElement("div");body.className="cat-body";
+  const name=document.createElement("h3");name.textContent=cat.name;
+  const tags=document.createElement("div");tags.className="tags";
+  (cat.tags||[]).forEach(t=>{const chip=document.createElement("span");chip.className="tag";chip.textContent=t;tags.append(chip)});
+  if(cat.specialService){const chip=document.createElement("span");chip.className="tag";chip.textContent="特殊服務";tags.append(chip)}
+  const intro=document.createElement("p");intro.textContent=cat.intro||"";
+  const btn=document.createElement("button");btn.type="button";btn.className="cat-details";btn.textContent="查看貓咪介紹 →";
+  btn.addEventListener("click",()=>{
+   document.getElementById("dialog-title").textContent=cat.name;
+   const detail=document.getElementById("dialog-body");detail.replaceChildren();
+   const p=document.createElement("p");p.textContent=cat.intro||"";detail.append(p);
+   if(cat.specialService){const heading=document.createElement("h3");heading.textContent="特殊服務";const description=document.createElement("p");description.textContent=cat.specialService;detail.append(heading,description)}
+   dialog.showModal();
+  });
+  body.append(name,tags,intro,btn);card.append(image,body);wrap.append(card);
+ }
+ return wrap;
 }
-positionBoundBookmarks();
-window.addEventListener("resize",positionBoundBookmarks);
-function renderTabs(){
- filters.replaceChildren();
- traits.forEach(([tag])=>{
-  const b=document.createElement("button");b.type="button";
-  b.className="bookmark-tab"+(selected===tag?" active":"");
-  const label=document.createElement("span");label.textContent=tag;b.append(label);
-  b.setAttribute("aria-pressed",String(selected===tag));
-  b.addEventListener("click",()=>switchTrait(tag));filters.append(b);
+function createTab(label,chapter,side,color){
+ const btn=document.createElement("button");
+ btn.type="button";
+ btn.className="bound-tab bound-tab-"+side;
+ btn.style.setProperty("--tab-color",color);
+ btn.style.setProperty("--tab-index",chapter);
+ btn.dataset.chapter=chapter;
+ btn.setAttribute("aria-label","翻到"+label+"分類");
+ btn.textContent=label;
+ btn.addEventListener("click",event=>{event.stopPropagation();turnTo(chapter)});
+ return btn;
+}
+function faceHeader(chapter){
+ const heading=document.createElement("div");heading.className="book-page-heading";
+ const left=document.createElement("span");left.textContent="CATTAIL · CAT DIRECTORY";
+ const right=document.createElement("span");right.textContent="P."+String(chapter+1).padStart(2,"0")+" / "+traits.length;
+ heading.append(left,right);return heading;
+}
+traits.forEach(([label,desc],i)=>{
+ const leaf=document.createElement("article");
+ leaf.className="book-leaf";leaf.dataset.index=i;
+ const front=document.createElement("div");front.className="leaf-face leaf-front";
+ const frontContent=document.createElement("div");frontContent.className="book-leaf-content";
+ frontContent.append(faceHeader(i));
+ const heading=document.createElement("div");heading.className="book-trait-heading";
+ const h3=document.createElement("h3");h3.textContent=label;
+ const p=document.createElement("p");p.textContent=desc;
+ heading.append(h3,p);frontContent.append(heading,catCards(label));
+ front.append(frontContent,createTab(label,i,"left",leafColors[i]));
+ const back=document.createElement("div");back.className="leaf-face leaf-back";
+ const nextIndex=Math.min(i+1,traits.length-1);
+ const backContent=document.createElement("div");backContent.className="book-leaf-content";
+ backContent.append(faceHeader(nextIndex));
+ const center=document.createElement("div");center.className="book-back-content";
+ const number=document.createElement("span");number.className="eyebrow";number.textContent="CHAPTER "+String(nextIndex+1).padStart(2,"0");
+ const title=document.createElement("h3");title.textContent=traits[nextIndex][0];
+ const info=document.createElement("p");info.textContent=traits[nextIndex][1];
+ const paws=document.createElement("span");paws.className="book-paw";paws.setAttribute("aria-hidden","true");paws.textContent="🐾";
+ center.append(number,title,info,paws);backContent.append(center);
+ back.append(backContent,createTab(label,i,"right",leafColors[i]));
+ leaf.append(front,back);bookSheets.append(leaf);physicalLeaves.push(leaf);
+});
+function syncBook(){
+ physicalLeaves.forEach((leaf,i)=>{
+  const turned=i<currentChapter;
+  leaf.classList.toggle("turned",turned);
+  leaf.classList.toggle("current-leaf",i===currentChapter);
+  leaf.style.zIndex=String(turned?i+1:100-i);
+  leaf.querySelectorAll(".bound-tab").forEach(b=>b.setAttribute("aria-current",i===currentChapter?"page":"false"));
  });
 }
-function switchTrait(next){
- if(next===selected||isPageTurning)return;
- const nextSide=bookSide==="left"?"right":"left";
- if(reducedMotion.matches){
-  selected=next;bookSide=nextSide;catBook.dataset.side=bookSide;render();return;
+const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function turnTo(target){
+ if(bookBusy||target===currentChapter||target<0||target>=traits.length)return;
+ bookBusy=true;
+ const step=target>currentChapter?1:-1;
+ const animations=[];
+ let sequence=0;
+ while(currentChapter!==target){
+  const index=step>0?currentChapter:currentChapter-1;
+  const leaf=physicalLeaves[index];
+  leaf.style.zIndex=String(300+sequence);
+  leaf.classList.add("in-motion");
+  // In a forward turn, the next left sheet becomes visible; the old sheet lands on the right.
+  leaf.classList.toggle("turned",step>0);
+  const transition=reduceMotion.matches?0:680;
+  animations.push(new Promise(resolve=>{
+   if(!transition){resolve();return}
+   leaf.addEventListener("transitionend",e=>{if(e.propertyName==="transform")resolve()},{once:true});
+   setTimeout(resolve,transition+100);
+  }).then(()=>{leaf.classList.remove("in-motion")}));
+  currentChapter+=step;
+  sequence++;
+  if(currentChapter!==target)await pause(reduceMotion.matches?0:125);
  }
- isPageTurning=true;
- const direction=bookSide==="left"?"flipping-ltr":"flipping-rtl";
- bookPage.classList.remove("flipping","flipping-ltr","flipping-rtl");
- void bookPage.offsetWidth;
- bookPage.classList.add(direction);
- // Bookmarks are attached to the moving leaf edge, not teleported after the page swap.
- catBook.dataset.side=nextSide;
- pageSwapTimer=setTimeout(()=>{selected=next;render();},440);
- pageEndTimer=setTimeout(()=>{
-  bookPage.classList.remove("flipping-ltr","flipping-rtl");
-  bookSide=nextSide;isPageTurning=false;
- },900);
+ await Promise.all(animations);
+ syncBook();
+ bookBusy=false;
 }
-function render(){
- renderTabs();
- const item=traits.find(([x])=>x===selected);
- title.textContent=item[0];description.textContent=item[1];
- pageCounter.textContent="P."+String(traits.findIndex(([t])=>t===selected)+1).padStart(2,"0")+" / "+traits.length;
- list.replaceChildren();
- const matching=cats.filter(cat=>selected==="全部"||(selected==="特殊服務"?Boolean(cat.specialService):cat.tags.includes(selected)));
- if(!matching.length){const el=document.createElement("div");el.className="empty";el.innerHTML='<div class="big" aria-hidden="true">🐾</div><h3>貓咪名簿準備中</h3><p>貓咪照片與個別資料尚待登錄。請稍後再來認識牠們。</p>';list.append(el);return}
- matching.forEach(cat=>{
- const card=document.createElement("article");card.className="cat-card";
- const image=document.createElement("div");image.className="cat-image";
- if(cat.image){const img=document.createElement("img");img.src=cat.image;img.alt=cat.name;img.loading="lazy";img.style.cssText="width:100%;height:100%;object-fit:cover";image.append(img)}else image.textContent="🐈";
- const body=document.createElement("div");body.className="cat-body";
- const name=document.createElement("h3");name.textContent=cat.name;
- const tags=document.createElement("div");tags.className="tags";(cat.tags||[]).forEach(t=>{const chip=document.createElement("span");chip.className="tag";chip.textContent=t;tags.append(chip)});
- if(cat.specialService){const chip=document.createElement("span");chip.className="tag";chip.textContent="特殊服務";tags.append(chip)}
- const intro=document.createElement("p");intro.textContent=cat.intro||"";
- const button=document.createElement("button");button.className="cat-details";button.textContent="查看貓咪介紹 →";button.addEventListener("click",()=>{document.getElementById("dialog-title").textContent=cat.name;const detail=document.getElementById("dialog-body");detail.replaceChildren();const p=document.createElement("p");p.textContent=cat.intro||"";detail.append(p);if(cat.specialService){const h=document.createElement("h3");h.textContent="特殊服務";const s=document.createElement("p");s.textContent=cat.specialService;detail.append(h,s)}dialog.showModal()});
- body.append(name,tags,intro,button);card.append(image,body);list.append(card);
- })
-}
-render();
+syncBook();
 document.getElementById("close-dialog").addEventListener("click",()=>dialog.close());
 const menuToggle=document.getElementById("menu-toggle"),nav=document.getElementById("nav-links");
 menuToggle.addEventListener("click",()=>{const open=nav.classList.toggle("open");menuToggle.setAttribute("aria-expanded",String(open))});
