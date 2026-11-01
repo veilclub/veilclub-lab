@@ -91,6 +91,34 @@ dialog{border:none;border-radius:22px;max-width:520px;width:calc(100% - 30px);pa
 @media(max-width:860px){.cat-book{grid-template-columns:87px minmax(0,1fr)}.bookmark-tab{width:80px;min-height:43px;font-size:12px}.cat-book-tabs{gap:7px}.page-content{padding:27px 24px 31px}.cat-book .cats{grid-template-columns:1fr}.cat-book-page{min-height:600px}.page-content{min-height:600px}}
 @media(max-width:550px){.cat-book{grid-template-columns:68px minmax(0,1fr)}.cat-book-tabs{gap:6px;padding-top:23px}.bookmark-tab{width:62px;min-height:38px;font-size:11px;padding-right:6px}.bookmark-tab.active{transform:translateX(8px)}.bookmark-tab span{padding:7px 4px 7px 0}.cat-book-page{border-radius:3px 14px 14px 3px;min-height:550px}.page-content{padding:26px 14px 25px 19px;min-height:550px}.book-page-heading{font-size:9px;letter-spacing:.04em;margin-bottom:19px}.book-explainer{display:block;padding:12px 13px}.book-explainer strong{display:block;margin-bottom:4px}.book-explainer span{font-size:12px}.cat-book .empty{min-height:220px;padding:15px}.cat-book .empty p{font-size:12px}.cat-book .empty h3{font-size:17px}}
 @media(prefers-reduced-motion:reduce){.cat-book-page.flipping .page-flip-overlay,.cat-book-page.flipping .page-content{animation:none}.bookmark-tab{transition:none}}
+
+/* Bound bookmark leaves: the tab rail travels with the turning paper. */
+.cat-book{--bookmark-width:110px;display:block;position:relative;max-width:1060px;perspective:2000px;overflow:visible}
+.cat-book-tabs{position:absolute;top:0;bottom:0;left:0;width:var(--bookmark-width);height:100%;z-index:6;transform:translateX(0);transition:transform .88s cubic-bezier(.32,.04,.25,1);display:flex;align-items:flex-end;flex-direction:column;gap:8px;padding:27px 0 25px;pointer-events:auto}
+.cat-book-stage{position:relative;width:calc(100% - var(--bookmark-width));margin-left:var(--bookmark-width);transform:translateX(0);transition:transform .88s cubic-bezier(.32,.04,.25,1);perspective:2000px}
+.cat-book[data-side="right"] .cat-book-tabs{transform:translateX(calc(100% * 0 + var(--book-travel, 0px)));align-items:flex-start}
+.cat-book[data-side="right"] .cat-book-stage{transform:translateX(calc(-1 * var(--bookmark-width)))}
+.cat-book[data-side="right"] .bookmark-tab{padding:0 0 0 11px}
+.cat-book[data-side="right"] .bookmark-tab:before{inset:0 0 0 3px;clip-path:polygon(12% 0,100% 0,100% 100%,12% 100%,0 50%);border-radius:0 12px 12px 0}
+.cat-book[data-side="right"] .bookmark-tab:after{right:auto;left:8px;transform:skewY(-30deg)}
+.cat-book[data-side="right"] .bookmark-tab.active{transform:translateX(-13px)}
+.cat-book[data-side="right"] .bookmark-tab:hover{transform:translateX(-7px)}
+.cat-book[data-side="right"] .bookmark-tab.active:hover{transform:translateX(-13px)}
+.cat-book[data-side="right"] .cat-book-page{border-radius:22px 5px 5px 22px;box-shadow:-6px 13px 34px #3b4c3b1c,inset -11px 0 15px #645c4a12;background:linear-gradient(270deg,#eae7dc 0,#fffdf7 4%,#fffcf5 60%,#faf4e7 100%)}
+.cat-book[data-side="right"] .book-spine{left:auto;right:0;background:linear-gradient(270deg,#77736926,transparent)}
+.cat-book[data-side="right"] .cat-book-stage:after{left:12px;right:9px}
+.cat-book .page-flip-overlay{transform-origin:0 50%;will-change:transform;backface-visibility:visible}
+.cat-book .cat-book-page.flipping-ltr .page-flip-overlay{animation:boundLeafLTR .88s cubic-bezier(.42,.02,.62,1) both}
+.cat-book .cat-book-page.flipping-rtl .page-flip-overlay{transform-origin:100% 50%;animation:boundLeafRTL .88s cubic-bezier(.42,.02,.62,1) both}
+.cat-book .cat-book-page.flipping-ltr .page-content,.cat-book .cat-book-page.flipping-rtl .page-content{animation:bookContentTransition .88s ease both}
+.cat-book[data-side="left"] .cat-book-page .page-flip-overlay{background:linear-gradient(110deg,#fefbf3,#f0e5d5)}
+.cat-book[data-side="right"] .cat-book-page .page-flip-overlay{background:linear-gradient(260deg,#fefbf3,#f0e5d5)}
+@keyframes boundLeafLTR{0%{opacity:0;transform:rotateY(0deg)}3%{opacity:1}47%{opacity:1;transform:rotateY(89deg)}94%{opacity:1}100%{opacity:0;transform:rotateY(180deg)}}
+@keyframes boundLeafRTL{0%{opacity:0;transform:rotateY(0deg)}3%{opacity:1}47%{opacity:1;transform:rotateY(-89deg)}94%{opacity:1}100%{opacity:0;transform:rotateY(-180deg)}}
+@keyframes bookContentTransition{0%,42%{opacity:1}48%,58%{opacity:0}70%,100%{opacity:1}}
+@media(max-width:860px){.cat-book{--bookmark-width:87px}.cat-book-tabs{gap:7px}}
+@media(max-width:550px){.cat-book{--bookmark-width:68px}.cat-book-tabs{gap:6px;padding-top:23px}}
+@media(prefers-reduced-motion:reduce){.cat-book-tabs,.cat-book-stage{transition:none!important}.cat-book-page.flipping-ltr .page-flip-overlay,.cat-book-page.flipping-rtl .page-flip-overlay,.cat-book-page.flipping-ltr .page-content,.cat-book-page.flipping-rtl .page-content{animation:none!important}}
 </style>
 </head>
 <body>
@@ -115,7 +143,7 @@ dialog{border:none;border-radius:22px;max-width:520px;width:calc(100% - 30px);pa
 </div></div></section>
 <section class="section alt" id="cats"><div class="wrapper">
 <div class="section-head"><div><div class="eyebrow">MEET OUR CATS</div><h2>貓咪名簿</h2><p class="section-desc">點選左側書籤，翻閱不同個性的貓咪。貓咪自由活動，不提供指名。</p></div><div class="decor">Every cat has a story.</div></div>
-<div class="cat-book" id="cat-book">
+<div class="cat-book" id="cat-book" data-side="left">
 <nav class="cat-book-tabs" id="filters" aria-label="貓咪性格書籤"></nav>
 <div class="cat-book-stage">
 <div class="cat-book-page" id="cat-book-page">
@@ -180,11 +208,19 @@ const filters=document.getElementById("filters"),list=document.getElementById("c
 const title=document.getElementById("trait-title"),description=document.getElementById("trait-description");
 const dialog=document.getElementById("cat-dialog");
 let selected="全部";
+const catBook=document.getElementById("cat-book");
 const bookPage=document.getElementById("cat-book-page");
 const pageCounter=document.getElementById("book-page-number");
 const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
+let bookSide="left";
 let isPageTurning=false;
 let pageSwapTimer=null,pageEndTimer=null;
+function positionBoundBookmarks(){
+ const travel=Math.max(0,catBook.clientWidth-parseFloat(getComputedStyle(catBook).getPropertyValue("--bookmark-width")));
+ catBook.style.setProperty("--book-travel",travel+"px");
+}
+positionBoundBookmarks();
+window.addEventListener("resize",positionBoundBookmarks);
 function renderTabs(){
  filters.replaceChildren();
  traits.forEach(([tag])=>{
@@ -197,13 +233,22 @@ function renderTabs(){
 }
 function switchTrait(next){
  if(next===selected||isPageTurning)return;
- if(reducedMotion.matches){selected=next;render();return}
+ const nextSide=bookSide==="left"?"right":"left";
+ if(reducedMotion.matches){
+  selected=next;bookSide=nextSide;catBook.dataset.side=bookSide;render();return;
+ }
  isPageTurning=true;
- bookPage.classList.remove("flipping");
+ const direction=bookSide==="left"?"flipping-ltr":"flipping-rtl";
+ bookPage.classList.remove("flipping","flipping-ltr","flipping-rtl");
  void bookPage.offsetWidth;
- bookPage.classList.add("flipping");
- pageSwapTimer=setTimeout(()=>{selected=next;render();},410);
- pageEndTimer=setTimeout(()=>{bookPage.classList.remove("flipping");isPageTurning=false;},850);
+ bookPage.classList.add(direction);
+ // Bookmarks are attached to the moving leaf edge, not teleported after the page swap.
+ catBook.dataset.side=nextSide;
+ pageSwapTimer=setTimeout(()=>{selected=next;render();},440);
+ pageEndTimer=setTimeout(()=>{
+  bookPage.classList.remove("flipping-ltr","flipping-rtl");
+  bookSide=nextSide;isPageTurning=false;
+ },900);
 }
 function render(){
  renderTabs();
