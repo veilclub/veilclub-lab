@@ -7,7 +7,7 @@
 <title>貓尾草｜CATTAIL</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap');
-:root{--paper:#faf4e9;--cream:#fffaf2;--ink:#374139;--sub:#677568;--green:#638674;--dark:#3d5b4b;--leaf:#e3ebdb;--line:#dcdccc;--amber:#b97d47;--pink:#f7e1d8}
+:root{--paper:#F7F0E5;--cream:#FFF9F0;--ink:#574338;--sub:#806C5D;--green:#8DAF9E;--dark:#73513F;--leaf:#C3DED0;--line:#E3D4C4;--amber:#A97957;--pink:#EBC9C5;--wood:#A97957;--mint:#C3DED0;--latte:#EBD9C4;--rose:#EBC9C5}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans","Noto Sans TC",sans-serif;line-height:1.8}button,a{font:inherit}a{color:inherit;text-decoration:none}button{cursor:pointer}::selection{background:#b9d2ae}
 .wrapper{width:min(1140px,calc(100% - 42px));margin-inline:auto}
 header{position:sticky;top:0;z-index:30;background:#faf4e9ed;backdrop-filter:blur(14px);border-bottom:1px solid #ddd9cd}.nav{height:74px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:11px;font-size:21px;font-weight:800;letter-spacing:.08em}.brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:45% 55% 49% 51%;background:var(--dark);color:#fff;font-size:21px}.nav-links{display:flex;gap:27px;align-items:center;font-size:13px;font-weight:700}.nav-links a:hover{color:var(--green)}.nav .pill{background:var(--dark);color:#fff;padding:10px 18px;border-radius:99px}.mobile-toggle{display:none;border:0;background:transparent;font-size:25px;color:var(--dark)}
@@ -159,6 +159,69 @@ dialog{border:none;border-radius:22px;max-width:520px;width:calc(100% - 30px);pa
 @media(max-width:850px){.physical-book{--tabW:61px;padding:0 var(--tabW)}.book-spread{height:560px}.book-leaf-content,.book-base-right{padding:22px 15px}.bound-tab{height:40px;top:calc(20px + var(--tab-index) * 49px);font-size:11px}.book-page-heading{font-size:9px;letter-spacing:0}.book-trait-heading{padding:10px}.book-trait-heading h3{font-size:17px}.book-trait-heading p{font-size:11px}}
 @media(max-width:600px){.physical-book{--tabW:42px;padding:0 var(--tabW)}.book-spread{height:550px}.book-leaf-content{padding:19px 9px;overflow:auto}.book-base-right{padding:17px 8px}.book-page-heading{font-size:8px;gap:4px;margin-bottom:12px}.book-trait-heading{padding:8px;margin-bottom:12px}.book-trait-heading h3{font-size:14px}.book-trait-heading p{font-size:10px;line-height:1.5}.book-cat-list .empty{min-height:200px;padding:8px}.book-cat-list .empty .big{font-size:32px}.book-cat-list .empty h3{font-size:13px}.book-cat-list .empty p{font-size:10px}.bound-tab{height:39px;top:calc(18px + var(--tab-index) * 48px);font-size:10px;padding:0 1px;writing-mode:vertical-rl;letter-spacing:0}.book-back-content h3{font-size:20px}.book-back-content p{font-size:11px;line-height:1.6}.book-paw{font-size:25px}.book-cat-list .cat-body{padding:9px}.book-cat-list .cat-body h3{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.book-leaf{transition:none!important}.book-leaf.in-motion:before{animation:none!important}}
+
+/* CATTAIL palette v2 — buttercream, caramel wood, dusty pink & mint */
+body{background:var(--paper);color:var(--ink)}
+header{background:#f7f0e5f2;border-bottom-color:#e6d7c6}
+.brand{color:#664733}.brand-mark{background:#a97957}
+.nav-links a:hover{color:#a97957}
+.nav .pill,.btn.primary{background:#795542;color:#fff;border-color:#795542}
+.btn.secondary{color:#795542;border-color:#b78a6b}
+.btn:hover{box-shadow:0 7px 20px #775a4230}
+.hero{background:radial-gradient(circle at 81% 17%,#f4d8ca 0,transparent 28%),radial-gradient(circle at 66% 90%,#d4e6d9 0,transparent 32%),linear-gradient(115deg,#f3e3d2,#fff8ec 70%)}
+.eyebrow{color:#a77a5a}
+.hero h1,.section h2,.section h3{color:#73513f}
+.hero .english,.section-head .decor{color:#b78065}
+.hero p,.section-desc{color:#806c5d}
+.art-circle{background:#c3ded0;box-shadow:inset 0 0 0 18px #e4eee4}
+.cat-illustration{filter:drop-shadow(0 10px 0 #a9c9ba)}
+.art-circle:before,.art-circle:after{color:#e5b0a8}
+.hero-sticker{background:#fff5e9;border-color:#e8d6c2;color:#785542}
+.section.alt{background:#fff9f1}
+.corner-paper{background:radial-gradient(ellipse at 50% 38%,#fffdf7 5%,var(--corner-tone) 120%);border-color:#e1d1bd;box-shadow:0 19px 45px #79574216,0 3px 7px #7957420b}
+.corner-paper[data-active="counter"]{--corner-tone:#e9d6c2}
+.corner-paper[data-active="play"]{--corner-tone:#f2d8ca}
+.corner-paper[data-active="tea"]{--corner-tone:#cfe3d7}
+.corner-paper[data-active="care"]{--corner-tone:#eed2d3}
+.corner-paper-grain{border-color:#a9795730}
+.corner-kicker{color:#a97957}
+.corner-display h3{color:#795542}
+.corner-display p{color:#806c5d}
+.corner-flap .flap-fold{background:linear-gradient(145deg,#fff5e5,#e9cbab)}
+.corner-flap.active .flap-fold{background:linear-gradient(145deg,#edcfb1,#c99d7e)}
+.corner-flap .flap-label{color:#664733}
+.corner-hint{color:#927a68}
+.physical-book{filter:drop-shadow(0 1px 0 #fff9f2)}
+.book-spread:before{background:#ddc7ae;box-shadow:0 5px #bd9e7e,0 8px #f2dfc6}
+.book-base{border-color:#dfcbb7;background:linear-gradient(105deg,#efe1cd,#fffbf3 16%,#fff8ec)}
+.book-base-right{background:linear-gradient(100deg,#e7d1b9,#fffaf1 11%,#fff7ea)}
+.leaf-face{border-color:#deccba;background:linear-gradient(100deg,#fffdf6,#fcf5e8 75%,#dfc7ad 100%);box-shadow:inset -10px 0 15px #966f4c1c}
+.leaf-back{background:linear-gradient(90deg,#e4ceb7,#fffaf0 13%,#fcf2e5);box-shadow:inset 11px 0 16px #966f4c20}
+.book-trait-heading{background:#f1e6d8;border:1px solid #e4d4c3}
+.book-trait-heading h3,.book-back-content,.book-back-content h3{color:#795542}
+.book-trait-heading p,.book-back-content p{color:#806c5d}
+.book-page-heading{color:#a97957;border-color:#e9d7c5}
+.book-center-spine{background:linear-gradient(90deg,#6e4d3300,#88684937 45%,#fff9f0b0 70%,transparent)}
+.bound-tab{border-color:#ad9e8e;color:#624a3a;background:linear-gradient(120deg,#ffffffbe,var(--tab-color) 80%);box-shadow:0 3px 7px #65503d33}
+.current-leaf .bound-tab-left{background:linear-gradient(120deg,#aa7a59,#78523e);color:#fff}
+.book-cat-list .empty{background:radial-gradient(circle at top,#fff9f0,#f6eadd);border-color:#d9c4af}
+.cat-card,.menu-panel{background:#fffbf5;border-color:#e6d5c3}
+.cat-image{background:#dce9df}
+.tag{background:#dbe8dd;color:#665344}
+.cat-details{background:#e9d1bc;color:#70513e}
+.entry-banner{background:#86604a;color:#fff8ef}
+.entry-banner small{color:#f3e2d4}
+.menu-item{border-color:#eadac8}
+.menu-item .price{color:#ad7353}
+.menu-note{background:#f1e5d6;color:#795e4b}
+.behavior,.rule{background:#fffaf3;border-color:#e5d5c4}
+.behavior .num{background:#c3ded0;color:#5b5343}
+.rule:before{color:#b47c5b}
+footer{background:#624838;color:#fff8ee}
+.footer-note{color:#e4d2c4}
+.copyright{border-color:#987561;color:#dac1af}
+dialog{background:#fff9f0;color:#574338}
+dialog button{background:#795542}
 </style>
 </head>
 <body>
@@ -253,7 +316,7 @@ const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
 let currentChapter=0;
 let bookBusy=false;
 const physicalLeaves=[];
-const leafColors=["#dfe6de","#efd7d7","#d7e5eb","#f5ddbf","#f2e8c5","#d9e9d7","#e6d8e9","#d9e8f0","#d9e9e0","#ebdfbe"];
+const leafColors=["#EADDCB","#EBC9C5","#D5E4DE","#E9CEAD","#F2E2BC","#C3DED0","#E6CFCF","#D8E6DF","#BFDACD","#D9BA96"];
 function catCards(category){
  const wrap=document.createElement("div");
  wrap.className="cats book-cat-list";
