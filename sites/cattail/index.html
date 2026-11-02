@@ -363,12 +363,42 @@ footer{background:rgba(43,29,23,.93)}
 @media(prefers-reduced-motion:reduce){
  .cat-doodle-art,.menu-panel{transition:none}
 }
+
+/* Hand-illustrated CATTAIL hero mascot, replacing the platform cat emoji. */
+.hero .mascot-circle{width:min(100%,430px);background:radial-gradient(circle at 45% 38%,#faf0dd 0,#c4dcc8 66%,#92af9d 100%);box-shadow:inset 0 0 0 12px #f5e7d2,0 14px 36px #25160f48}
+.hero-mascot{width:100%;height:100%;display:block;overflow:visible;transform:translateY(3%) scale(1.08);filter:drop-shadow(0 12px 8px #51372224)}
+.hero .hero-sticker{right:-7px;bottom:-13px}
+@media(max-width:690px){.hero .mascot-circle{width:245px}.hero .hero-sticker{right:4%;bottom:0}.hero-mascot{transform:translateY(3%) scale(1.05)}}
 </style>
 </head>
 <body>
 <header><div class="wrapper nav"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">🐾</span><span>貓尾草</span></a><button class="mobile-toggle" aria-label="展開選單" aria-expanded="false" id="menu-toggle">☰</button><nav class="nav-links" id="nav-links" aria-label="主要導覽"><a href="#corners">店裡的四個角落</a><a href="#cats">貓咪名簿</a><a href="#services">消費項目</a><a href="#rules">入店須知</a><a class="pill" href="#notice">最新公告</a></nav></div></header>
 <main id="top">
-<section class="hero"><div class="wrapper hero-grid"><div><div class="eyebrow">A LITTLE PLACE FOR CAT ENCOUNTERS</div><h1>貓尾草</h1><div class="english">CATTAIL · Cat Interaction Lounge</div><p>有的貓咪喜歡撒嬌，有的偏愛獨處，也有些總在惡作劇。來到貓尾草，不必挑選誰，跟著貓咪的腳步，讓每場相遇自然發生。</p><div class="hero-actions"><a class="btn primary" href="#cats">認識店裡的貓咪 ↗</a><a class="btn secondary" href="#services">看看消費項目</a></div></div><div class="hero-art" aria-hidden="true"><div class="cat-doodle-art"><svg class="cat-doodle-svg" viewBox="0 0 170 155" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g fill="none" stroke="#865f4b" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"><path fill="#f4dfcd" d="M30 89Q23 48 47 29L57 10 80 25Q97 19 113 28L136 14 138 44Q153 63 145 90Q135 117 91 120Q43 123 30 89Z"/><path d="M55 73q9 8 18 0M103 73q9 8 18 0M83 83l7 4 7-4M90 87v8m0 0q-8 8-15 0m15 0q8 8 15 0M43 89l-24-6m24 14-26 3m116-11 24-6m-24 14 26 3"/><path d="M58 119q-11 7-8 18m74-24q20 14 14 29M50 137q33 13 88 5"/></g><path d="M48 41q10-9 21-7" fill="none" stroke="#fff9f1" stroke-width="4" stroke-linecap="round"/><ellipse cx="90" cy="145" rx="58" ry="5" fill="#6f4a3520"/></svg></div><div class="art-circle"><span class="cat-illustration">🐈</span></div><div class="hero-sticker">✿ 無指名服務・自由相遇</div></div></div></section>
+<section class="hero"><div class="wrapper hero-grid"><div><div class="eyebrow">A LITTLE PLACE FOR CAT ENCOUNTERS</div><h1>貓尾草</h1><div class="english">CATTAIL · Cat Interaction Lounge</div><p>有的貓咪喜歡撒嬌，有的偏愛獨處，也有些總在惡作劇。來到貓尾草，不必挑選誰，跟著貓咪的腳步，讓每場相遇自然發生。</p><div class="hero-actions"><a class="btn primary" href="#cats">認識店裡的貓咪 ↗</a><a class="btn secondary" href="#services">看看消費項目</a></div></div><div class="hero-art" aria-hidden="true"><div class="art-circle mascot-circle"><svg class="hero-mascot" viewBox="0 0 400 400" role="img" aria-label="戴著粉紅貝雷帽、綁著薄荷綠領巾的手繪虎斑貓" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="fur" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff8e8"/><stop offset=".58" stop-color="#f5dec5"/><stop offset="1" stop-color="#eec9a9"/></linearGradient><linearGradient id="caramel" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#e9bd93"/><stop offset="1" stop-color="#c98c64"/></linearGradient></defs>
+<ellipse cx="202" cy="365" rx="146" ry="12" fill="#513c2a" opacity=".14"/>
+<g stroke="#94684b" stroke-width="4.2" stroke-linejoin="round" stroke-linecap="round">
+<path d="M260 247C337 180 395 241 358 310c-29 52-75 47-85 19 35 11 64-6 63-33-2-32-29-39-57-13" fill="url(#caramel)"/>
+<path d="M106 239c-35 16-56 57-47 93 9 37 41 41 80 31 23 14 112 14 143-1 47 6 80-8 74-48-5-41-42-67-80-76Z" fill="url(#fur)"/>
+<path d="M73 132 83 45l68 51M244 97l70-57 14 95" fill="#ebbc94"/>
+<path d="M84 117 90 73l42 35M264 104l43-39 7 54" fill="#f1b3a8" stroke="#ce8d82" stroke-width="2"/>
+<path d="M56 169c0-86 62-122 144-122 90 0 153 47 151 129-2 83-56 134-147 136C107 316 59 262 56 169Z" fill="url(#fur)"/>
+<path d="M88 147c8-47 41-77 75-86l-4 59-19 30-23 13-29-16ZM222 64c32 0 67 18 89 52l-32 30-27-10-26-29Z" fill="#d9a27e" stroke="none"/>
+<path d="M132 66c14-6 31-8 51-8l-7 65-24 27-13-34Z" fill="#d5a07b" stroke="none"/>
+<path d="M126 185q24-27 47 0M230 185q24-27 47 0" fill="none" stroke="#744e3e" stroke-width="9"/>
+<ellipse cx="120" cy="220" rx="27" ry="17" fill="#efa9a1" stroke="none" opacity=".84"/><ellipse cx="283" cy="220" rx="27" ry="17" fill="#efa9a1" stroke="none" opacity=".84"/>
+<path d="m193 204 10 6 10-6-10-6Z" fill="#d98d88" stroke-width="2"/>
+<path d="M203 210v12M203 221q-17 16-28-3M203 221q15 17 28-3" fill="none" stroke="#8a5a47" stroke-width="3.5"/>
+<path d="M173 229q28 37 60 0c0 29-18 45-31 45-17 0-30-18-29-45Z" fill="#dc8d86" stroke-width="3"/>
+<path d="M99 218 47 208M101 231 43 238M299 218l51-10M298 232l58 8" fill="none" stroke-width="3"/>
+<path d="M107 263c24 20 63 27 96 26 39 0 74-9 97-27l12 21-34 50-63-16-64 16-52-49Z" fill="#bdd9c5"/>
+<path d="M189 293c-19-18-42-12-36 7 5 18 27 13 43 1 9 18 37 22 43 6 8-20-23-33-43-14Z" fill="#a0bea9" stroke-width="3"/>
+<path d="M202 317 173 351 144 321M204 317l34 35 25-29" fill="#bdd9c5" stroke-width="3"/>
+<path d="M99 333c-11-27 42-48 68-18 14 15 15 36 5 45-15 15-68 12-73-27ZM223 325c11-27 63-28 76-2 16 33-5 45-42 45-24 0-43-14-34-43Z" fill="#fff2df"/>
+<path d="M91 121c-35-18 13-86 77-86 25-39 84-27 112 4 17 19 13 32-14 31-49-8-99 8-140 53-16 18-32 8-35-2Z" fill="#e5a8a2"/>
+<path d="M110 101c21-46 82-76 135-61" fill="none" stroke="#f5c8be" stroke-width="7"/>
+</g><g fill="none" stroke="#cfaa89" stroke-width="2.3" opacity=".75" stroke-linecap="round"><path d="m80 156 15 8m4-46 16 7m143-2 16-9m-5 43 15-8m-198 99 14 3m204-8-11 7m-171 87 10 6m150 10 11-8"/></g>
+</svg></div><div class="hero-sticker">✿ 無指名服務・自由相遇</div></div></div></section>
 <section class="section" id="corners"><div class="wrapper"><div class="section-head"><div><div class="eyebrow">THE FOUR CORNERS</div><h2>店裡的四個角落</h2><p class="section-desc">每個角落都有不同的步調，找到適合自己的位置，享受與貓咪相處的時間。</p></div><div class="decor">Make yourself at home.</div></div><div class="corner-switchboard" id="corner-switchboard">
 <div class="corner-paper" id="corner-paper" data-active="counter">
 <div class="corner-paper-grain" aria-hidden="true"></div>
