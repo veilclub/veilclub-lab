@@ -376,7 +376,7 @@ footer{background:rgba(43,29,23,.93)}
 .ct-edge-illustration{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden}
 .ct-border-side{position:absolute;top:0;bottom:0;width:clamp(120px,15vw,245px);pointer-events:none;opacity:.87}
 .ct-border-left{left:0}.ct-border-right{right:0}
-.ct-sway-layer{position:absolute;width:100%;height:auto;aspect-ratio:1/3;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none;transform-origin:12% 85%;will-change:transform;filter:drop-shadow(0 4px 5px #24190f18)}
+.ct-sway-layer{position:absolute;width:100%;height:auto;aspect-ratio:1/3;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none;transform-origin:12% 85%;backface-visibility:hidden}
 .ct-left{left:-17%}.ct-right{right:-17%;transform-origin:88% 85%}
 .ct-depth-1{top:-18%;opacity:.38;animation:ctBreezeA 11.7s ease-in-out -3.1s infinite alternate}
 .ct-depth-2{top:13%;opacity:.48;animation:ctBreezeB 8.9s ease-in-out -5.2s infinite alternate}
@@ -396,7 +396,26 @@ footer{background:rgba(43,29,23,.93)}
 @media(max-width:1050px){.ct-border-side{width:clamp(95px,13vw,170px);opacity:.69}}
 @media(max-width:700px){.ct-border-side{width:clamp(73px,23vw,105px);opacity:.5}.ct-left{left:-30%}.ct-right{right:-30%}.ct-depth-1,.ct-depth-3{opacity:.3}.ct-depth-4,.ct-depth-5{opacity:.66}}
 @media(max-width:400px){.ct-border-side{width:78px;opacity:.4}}
-@media(prefers-reduced-motion:reduce){.ct-sway-layer{animation:none!important;will-change:auto}}
+/* Motion budget: compositing only the most prominent stems; static foliage still provides depth. */
+.ct-low-power .ct-sway-layer{animation:none!important;will-change:auto!important}
+.ct-low-power .ct-depth-4{animation:ctBreezeD 21s ease-in-out infinite alternate!important}
+@media(min-width:701px){
+ .ct-depth-4,.ct-depth-5,.ct-depth-2{will-change:transform}
+ .ct-depth-1,.ct-depth-3{animation-duration:19s;animation-timing-function:ease-in-out}
+}
+@media(max-width:700px){
+ .ct-depth-1,.ct-depth-3{animation:none;will-change:auto}
+ .ct-depth-2{animation-duration:17s;will-change:auto}
+ .ct-depth-4,.ct-depth-5{animation-duration:15s;will-change:transform}
+}
+/* Low-power settings: preserve the watercolor border, animate only a single reed per side. */
+@media(prefers-reduced-data:reduce){
+ .ct-sway-layer{animation:none!important;will-change:auto!important}
+ .ct-depth-4{animation:ctBreezeD 21s ease-in-out infinite alternate!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .ct-sway-layer{animation:none!important;will-change:auto!important}
+}
 
 /* CATTAIL Discord community link: visible in the top bar on desktop and mobile. */
 .discord-nav-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 11px;border-radius:999px;color:#36261f!important;background:#bdd8cb;border:1px solid #d9e7db;white-space:nowrap;line-height:1.2;transition:transform .2s ease,filter .2s ease}
@@ -657,5 +676,13 @@ cornerButtons.forEach(button=>button.addEventListener("click",()=>{
   cornerDisplay.classList.remove("is-changing");
  },180);
 }));
+
+/* Lightweight motion for constrained devices, without changing the artwork. */
+try {
+ const lowPower = (navigator.connection && navigator.connection.saveData) ||
+   (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 2) ||
+   (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 2);
+ if (lowPower) document.documentElement.classList.add('ct-low-power');
+} catch (_) {}
 </script>
 </body></html>
