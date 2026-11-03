@@ -424,6 +424,21 @@ footer{background:rgba(43,29,23,.93)}
  .ct-sway-layer{animation:none!important;will-change:auto!important}
 }
 
+/* FPS-adaptive watercolor motion: all ten paintings always remain visible. */
+html.ct-adapt-balanced .ct-sway-layer{filter:none!important}
+html.ct-adapt-balanced .ct-depth-1,
+html.ct-adapt-balanced .ct-depth-3{animation:none!important;will-change:auto!important}
+html.ct-adapt-balanced .ct-depth-2{animation-duration:19s!important;will-change:auto!important}
+html.ct-adapt-balanced .ct-depth-4,
+html.ct-adapt-balanced .ct-depth-5{animation-duration:15s!important;will-change:transform}
+html.ct-adapt-lite .ct-sway-layer{filter:none!important;animation:none!important;will-change:auto!important}
+html.ct-adapt-lite .ct-depth-4{animation:ctBreezeD 22s ease-in-out infinite alternate!important}
+/* User preferences always override automatic performance adaptation. */
+@media(prefers-reduced-motion:reduce){
+ html.ct-adapt-balanced .ct-sway-layer,
+ html.ct-adapt-lite .ct-sway-layer{animation:none!important;will-change:auto!important}
+}
+
 /* CATTAIL Discord community link: visible in the top bar on desktop and mobile. */
 .discord-nav-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 11px;border-radius:999px;color:#36261f!important;background:#bdd8cb;border:1px solid #d9e7db;white-space:nowrap;line-height:1.2;transition:transform .2s ease,filter .2s ease}
 .discord-nav-link:hover,.discord-join:hover{transform:translateY(-2px);filter:brightness(1.06);color:#2e221c!important}
@@ -684,12 +699,49 @@ cornerButtons.forEach(button=>button.addEventListener("click",()=>{
  },180);
 }));
 
-/* Lightweight motion for constrained devices, without changing the artwork. */
-try {
+/* Gentle one-shot frame-pacing check. The artwork and motion are visible from frame one.
+   Check only after load, never benchmark by rendering additional graphics. */
+(() => {
+ const root = document.documentElement;
+ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+ const reducedData = window.matchMedia('(prefers-reduced-data: reduce)');
  const lowPower = (navigator.connection && navigator.connection.saveData) ||
    (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 2) ||
    (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 2);
- if (lowPower) document.documentElement.classList.add('ct-low-power');
-} catch (_) {}
+ if (lowPower) root.classList.add('ct-low-power');
+ if (reducedMotion.matches || reducedData.matches || lowPower || !window.requestAnimationFrame) return;
+
+ let started = false;
+ function sampleMotion() {
+  if (started || document.hidden || reducedMotion.matches || reducedData.matches) return;
+  started = true;
+  const frames = [];
+  let previous = 0, elapsed = 0, began = 0, rafId = 0;
+  function frame(now) {
+   if (document.hidden || reducedMotion.matches || reducedData.matches) return;
+   if (!began) began = now;
+   elapsed = now - began;
+   if (previous && elapsed > 350) {
+    const delta = now - previous;
+    if (delta > 0 && delta < 350) frames.push(delta);
+   }
+   previous = now;
+   if (elapsed < 3200) rafId = requestAnimationFrame(frame);
+   else if (frames.length >= 45) {
+    const ordered = frames.slice().sort((a,b) => a-b);
+    // Fastest quartile approximates display cadence (60/90/120 Hz), avoiding a hard 60fps target.
+    const cadence = ordered[Math.floor(ordered.length * .2)];
+    const slowFraction = frames.filter(ms => ms > cadence * 1.75 + 2).length / frames.length;
+    const verySlowFraction = frames.filter(ms => ms > cadence * 2.5 + 3).length / frames.length;
+    if (slowFraction > .27 || verySlowFraction > .13) root.classList.add('ct-adapt-lite');
+    else if (slowFraction > .13) root.classList.add('ct-adapt-balanced');
+   }
+  }
+  rafId = requestAnimationFrame(frame);
+ }
+ // Let layout/images settle; no visible loading screen or animation pause.
+ if (document.readyState === 'complete') sampleMotion();
+ else window.addEventListener('load', sampleMotion, {once:true});
+})();
 </script>
 </body></html>
