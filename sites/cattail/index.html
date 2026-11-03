@@ -396,6 +396,13 @@ footer{background:rgba(43,29,23,.93)}
 @media(max-width:1050px){.ct-border-side{width:clamp(95px,13vw,170px);opacity:.69}}
 @media(max-width:700px){.ct-border-side{width:clamp(73px,23vw,105px);opacity:.5}.ct-left{left:-30%}.ct-right{right:-30%}.ct-depth-1,.ct-depth-3{opacity:.3}.ct-depth-4,.ct-depth-5{opacity:.66}}
 @media(max-width:400px){.ct-border-side{width:78px;opacity:.4}}
+/* Desktop-quality watercolor shadows follow the individually moving leaves.
+   Narrow/low-power devices keep the optimized no-filter rendering. */
+@media(min-width:1051px) and (pointer:fine){
+ html:not(.ct-low-power) .ct-sway-layer{
+  filter:drop-shadow(0 4px 5px rgba(36,25,15,.095));
+ }
+}
 /* Motion budget: compositing only the most prominent stems; static foliage still provides depth. */
 .ct-low-power .ct-sway-layer{animation:none!important;will-change:auto!important}
 .ct-low-power .ct-depth-4{animation:ctBreezeD 21s ease-in-out infinite alternate!important}
