@@ -664,6 +664,128 @@ html.ct-adapt-lite .ct-depth-4{animation:ctBreezeD 22s ease-in-out infinite alte
  #behaviors .behavior,#rules .rule{padding:24px 25px!important}
  #notice .footer-grid>div:first-child .footer-note{padding:23px 26px}
 }
+
+/* Cattail layout repair v4: generous safe text zones within irregular painted paper. */
+#services .entry-banner{min-width:0}
+#services .entry-banner>div:first-child{min-width:0;flex:1 1 auto}
+#services .entry-banner strong{display:block;overflow-wrap:normal;word-break:normal;line-height:1.45}
+#services .entry-price{flex:0 0 auto}
+#services .menu-panel .menu-item>div{min-width:0}
+#services .menu-panel .menu-item .price{max-width:100%;box-sizing:border-box}
+#services .menu-panel h3{position:relative;z-index:1}
+#services .menu-grid{min-width:0}
+#services .menu-panel,#behaviors .behavior,#rules .rule{min-width:0;box-sizing:border-box}
+#services .menu-panel .menu-item p,#rules .rule,#behaviors .behavior{overflow-wrap:anywhere}
+#services .menu-panel .menu-item strong{line-height:1.4}
+@media(max-width:900px){
+ #services .scrapbook-stamp{display:none!important}
+}
+@media(max-width:690px){
+ html,body{max-width:100%;overflow-x:clip}
+ .section,.section.alt{padding-top:45px!important;padding-bottom:47px!important}
+ .section-head{margin-bottom:22px!important}
+ .section-head>div{min-width:0;max-width:100%}
+ .section-head .eyebrow{font-size:11px;letter-spacing:.14em;line-height:1.5}
+ #corners .section-head h2,#cats .section-head h2,#services .section-head h2,
+ #behaviors .section-head h2,#rules .section-head h2{
+  width:min(360px,100%)!important;
+  min-height:82px!important;
+  padding:20px 38px!important;
+  margin:8px 0 12px!important;
+  line-height:1.22!important;
+  font-size:clamp(20px,5.5vw,27px)!important;
+ }
+ #corners .section-head .section-desc,#cats .section-head .section-desc,
+ #services .section-head .section-desc,#behaviors .section-head .section-desc,
+ #rules .section-head .section-desc{
+  width:100%!important;max-width:100%!important;
+  box-sizing:border-box;
+  padding:30px 32px!important;
+  margin:0!important;
+  font-size:13px!important;line-height:1.75!important;
+  min-height:100px;
+ }
+ /* Label, headline, explanatory line and price each get a dedicated row. */
+ #services .entry-banner{
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+  gap:16px!important;padding:25px 25px 29px!important;
+  margin-top:20px!important;min-height:0!important;
+ }
+ #services .entry-banner:before{display:none}
+ #services .entry-banner>div:first-child{width:100%;flex:none;min-width:0}
+ #services .entry-banner small:first-child{
+  display:flex!important;width:max-content!important;max-width:100%;
+  min-height:42px!important;padding:11px 18px!important;
+  margin:0 0 15px -3px!important;font-size:12px!important;
+ }
+ #services .entry-banner strong{
+  display:block!important;max-width:100%;
+  font-size:clamp(18px,5vw,22px)!important;line-height:1.5!important;
+  letter-spacing:0!important;white-space:normal!important;
+  word-break:keep-all;overflow-wrap:break-word;
+ }
+ #services .entry-banner small:not(:first-child){
+  margin-top:10px!important;line-height:1.6!important;font-size:12px!important;
+ }
+ #services .entry-price{
+  display:block;align-self:flex-start;width:auto;
+  margin-top:1px;font-size:clamp(26px,8vw,33px)!important;
+  line-height:1.2!important;white-space:nowrap!important;
+ }
+ #services .entry-price span{font-size:13px!important}
+ #services .menu-grid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:26px!important;margin-top:23px!important}
+ #services .menu-panel{
+  width:100%!important;max-width:100%;min-width:0!important;
+  box-sizing:border-box!important;
+  padding:65px 29px 51px!important;
+  transform:none!important;
+  background-size:100% 100%!important;
+ }
+ #services .menu-panel:before{display:none!important}
+ #services .menu-panel h3{
+  margin:0 0 19px!important;
+  font-size:clamp(17px,4.5vw,21px)!important;
+  line-height:1.45!important;
+  padding-bottom:12px!important;
+  overflow-wrap:break-word;
+ }
+ #services .menu-panel h3[style]{margin-top:24px!important}
+ #services .menu-panel .menu-item{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  gap:10px!important;padding:19px 0 21px!important;
+  border-top:1px dashed rgba(145,101,68,.3)!important;
+ }
+ #services .menu-panel .menu-item strong{font-size:15px!important}
+ #services .menu-panel .menu-item p{font-size:13px!important;line-height:1.75!important;margin-top:7px!important}
+ #services .menu-panel .menu-item .price{
+  display:inline-block!important;justify-self:start!important;
+  width:auto!important;max-width:100%;margin:0!important;
+  font-size:15px!important;line-height:1.35!important;
+  padding:5px 12px!important;white-space:nowrap!important;
+  border-radius:7px;
+ }
+ #services .menu-note{padding:32px 27px!important;line-height:1.7!important}
+ #services .menu-note strong{margin-bottom:7px}
+ #behaviors .behaviors,#rules .rules{grid-template-columns:minmax(0,1fr)!important;gap:15px!important}
+ #behaviors .behavior,#rules .rule{
+  width:100%;min-height:0!important;box-sizing:border-box;
+  padding:30px 29px!important;line-height:1.8!important;font-size:13px!important;
+  transform:none!important;
+ }
+ #behaviors .behavior .num{flex-shrink:0}
+ .paw-trail{display:none!important}
+ #cats .physical-book{margin-bottom:0}
+ #cats .book-help{margin-top:18px}
+ #notice .footer-grid>div{min-width:0;max-width:100%}
+ #notice .footer-grid>div:first-child .footer-note{max-width:100%;box-sizing:border-box}
+}
+@media(max-width:380px){
+ #services .entry-banner{padding:23px 20px 27px!important}
+ #services .menu-panel{padding:58px 23px 46px!important}
+ #corners .section-head .section-desc,#cats .section-head .section-desc,
+ #services .section-head .section-desc,#behaviors .section-head .section-desc,
+ #rules .section-head .section-desc{padding:27px 25px!important}
+}
 </style>
 </head>
 <body>
