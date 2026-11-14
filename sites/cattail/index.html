@@ -859,6 +859,163 @@ html.ct-adapt-lite .ct-depth-4{animation:ctBreezeD 22s ease-in-out infinite alte
  #cat-dialog>h2{font-size:21px}
 }
 
+/* CATTAIL book folio & portrait layout v2 */
+/* Warm watercolor paper, a readable gutter, and quiet layered page edges.
+   Reuses the site's own subtle raster paper texture; no SVG artwork or heavy filters. */
+#cats .book-spread{height:650px;filter:drop-shadow(0 13px 18px rgba(29,17,10,.28))}
+#cats .book-spread::before{
+ background:linear-gradient(180deg,#f4e2c9 0%,#d2b390 55%,#9f775a 100%);
+ border:1px solid #ac8a6d;
+ box-shadow:0 3px 0 #e9d4b8,0 6px 0 #bb9879,0 9px 0 #f2e2c9,0 12px 15px #26150d61;
+}
+#cats .book-base,#cats .book-base-right,
+#cats .leaf-face{
+ background-color:#f9f0e2;
+ background-image:
+   radial-gradient(ellipse at 44% 36%,rgba(255,255,255,.35),transparent 62%),
+   linear-gradient(90deg,rgba(139,89,52,.10),rgba(255,250,239,.04) 14%,rgba(255,250,239,.10) 82%,rgba(130,82,48,.14)),
+   var(--ct-paper-texture);
+ background-position:center;
+ background-size:cover;
+ background-repeat:no-repeat;
+ border-color:#d7bda1;
+ color:#56402e;
+}
+#cats .leaf-front{
+ box-shadow:inset 14px 0 19px #fff9ed91,inset -15px 0 23px #79543825,inset 0 0 0 2px #fffdf56b;
+}
+#cats .leaf-back{
+ box-shadow:inset 19px 0 24px #7753392a,inset -9px 0 18px #fff9edbb,inset 0 0 0 2px #fffdf56b;
+}
+#cats .book-center-spine{
+ left:calc(50% - 11px);width:22px;
+ background:linear-gradient(90deg,transparent 0%,#61422e18 13%,#52362255 43%,#38251b49 51%,#fff8e68c 77%,transparent 100%);
+ box-shadow:none;
+}
+#cats .book-leaf-content{box-sizing:border-box;padding:27px 21px 31px;scrollbar-color:#c4a384 transparent;scrollbar-width:thin;overscroll-behavior:contain}
+#cats .book-page-heading{margin-bottom:20px;color:#a08060;letter-spacing:.07em}
+#cats .book-trait-heading{
+ border:1px solid #d3b99b;border-radius:5px 12px 8px 10px;
+ padding:14px 17px;
+ background:linear-gradient(125deg,#f2e0c8d9,#fff8e9d9);
+ box-shadow:inset 0 1px #fffdf7,0 3px 9px #8e6a4930;
+}
+#cats .book-trait-heading h3{color:#714d36}
+#cats .book-trait-heading p{color:#80654f}
+#cats .book-back-content{color:#604430}
+#cats .book-back-content h3{color:#774f37}
+#cats .book-back-content p{color:#80664f}
+/* Turn the index into stitched fabric / thick handmade-paper tabs, not acrylic buttons. */
+#cats .bound-tab{
+ background:
+   repeating-linear-gradient(35deg,rgba(255,255,255,.18) 0 1px,transparent 1px 5px),
+   linear-gradient(140deg,#fff8e0bd 0%,var(--tab-color) 47%,#b69a7ec7 100%)!important;
+ -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+ border:1px solid #a98c71!important;
+ color:#49362b!important;
+ border-radius:5px 11px 11px 5px!important;
+ text-shadow:0 1px 0 #fff8edaa;
+ box-shadow:inset 0 1px 0 #fffdf3cc,inset 0 -3px 3px #8d6c4d2b,2px 4px 7px #3420145c!important;
+ filter:none;
+}
+#cats .bound-tab-left{border-radius:11px 5px 5px 11px!important}
+#cats .bound-tab-right{border-radius:5px 11px 11px 5px!important}
+#cats .bound-tab::after{
+ content:"";inset:3px;left:3px;right:3px;top:3px;height:auto;
+ border:1px dashed #94796084;border-radius:5px;background:none;
+ pointer-events:none;
+}
+#cats .current-leaf .bound-tab-left{
+ background:repeating-linear-gradient(35deg,#ffffff18 0 1px,transparent 1px 5px),
+ linear-gradient(120deg,#f7dfbe,var(--tab-color) 55%,#bb9673)!important;
+ color:#38271c!important;
+ box-shadow:inset 0 1px 0 #fff9f0,3px 5px 9px #321b1059!important;
+}
+#cats .bound-tab:hover{filter:brightness(1.045);box-shadow:inset 0 1px #fff8eb,2px 5px 9px #2d190b61!important}
+/* Portrait / text folio: one compact card must be readable within a single page. */
+#cats .book-cat-list{gap:13px}
+#cats .book-cat-list .cat-card{
+ display:grid;grid-template-columns:minmax(108px,36%) minmax(0,1fr);
+ align-items:start;gap:14px;padding:13px;
+ border:1px solid #d6bea1;border-radius:10px 14px 11px 12px;
+ background:linear-gradient(138deg,#fff9ef,#f4e5d1);
+ box-shadow:0 3px 0 #ccb39455,0 7px 15px #6a482c25;
+ min-width:0;box-sizing:border-box;
+}
+#cats .book-cat-list .cat-image{
+ align-self:start;display:flex;align-items:center;justify-content:center;
+ box-sizing:border-box;min-width:0;width:100%;min-height:0;height:auto;max-height:none;
+ aspect-ratio:3 / 4;overflow:hidden;
+ padding:7px;border:1px solid #cdb494;border-radius:5px 9px 7px 7px;
+ background:linear-gradient(145deg,#f4e5cf,#dfc7ab);
+ box-shadow:inset 0 0 0 2px #fff6e879,0 3px 8px #50301a22;
+}
+#cats .book-cat-list .cat-image img{
+ display:block;width:100%;height:100%;max-width:100%;max-height:100%;
+ object-fit:contain;object-position:center;flex:none;border-radius:3px;
+ box-shadow:none;
+}
+#cats .book-cat-list .cat-body{
+ display:flex;flex-direction:column;align-items:flex-start;
+ min-width:0;height:100%;box-sizing:border-box;
+ padding:2px 0;
+}
+#cats .book-cat-list .cat-body h3{font-size:clamp(15px,1.55vw,19px);line-height:1.35;overflow-wrap:anywhere;margin:0 0 6px;color:#593d2a}
+#cats .book-cat-list .cat-member-role{font-size:10px;line-height:1.45;margin:0 0 8px}
+#cats .book-cat-list .tags{gap:5px;margin-bottom:8px}
+#cats .book-cat-list .tag{font-size:10px;line-height:1.4;padding:3px 7px}
+#cats .book-cat-list .cat-card-intro{
+ display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;
+ overflow:hidden;white-space:pre-line;font-size:12px;line-height:1.68;
+ margin:2px 0 12px!important;overflow-wrap:anywhere;
+}
+#cats .book-cat-list .cat-details{
+ display:block;float:none;width:100%;min-width:0;margin: auto 0 0;
+ padding:9px 7px;border-radius:7px;font-size:11px;
+ background:#dfbea0;color:#4b3124;
+}
+#cats .book-cat-list .cat-details:hover{background:#d6ac88}
+/* Tablet: keep the side-by-side folio but reduce the image share and line count. */
+@media(min-width:741px) and (max-width:1000px){
+ #cats .book-spread{height:630px}
+ #cats .book-leaf-content{padding:22px 13px 27px}
+ #cats .book-cat-list .cat-card{grid-template-columns:minmax(86px,38%) minmax(0,1fr);gap:10px;padding:10px}
+ #cats .book-cat-list .cat-image{padding:5px}
+ #cats .book-cat-list .cat-body h3{font-size:15px}
+ #cats .book-cat-list .tag{font-size:9px;padding:2px 6px}
+ #cats .book-cat-list .cat-card-intro{-webkit-line-clamp:3;font-size:11px}
+ #cats .book-cat-list .cat-details{font-size:10px;padding:8px 3px}
+}
+/* Narrow screens: stay on one column, with a much shorter portrait and no clipped text. */
+@media(max-width:740px){
+ #cats .book-spread{height:590px}
+ #cats .book-leaf-content{padding:19px 10px 24px}
+ #cats .book-cat-list .cat-card{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:8px}
+ #cats .book-cat-list .cat-image{
+  width:100%;height:auto;min-height:0;max-height:230px;
+  aspect-ratio:3/4;padding:5px;align-self:stretch;
+ }
+ #cats .book-cat-list .cat-image img{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain}
+ #cats .book-cat-list .cat-body{height:auto;padding:0 1px 2px}
+ #cats .book-cat-list .cat-body h3{font-size:13px}
+ #cats .book-cat-list .cat-member-role{font-size:9px;margin-bottom:5px}
+ #cats .book-cat-list .tag{font-size:9px;padding:2px 5px}
+ #cats .book-cat-list .cat-card-intro{font-size:10px;-webkit-line-clamp:2;margin:1px 0 8px!important}
+ #cats .book-cat-list .cat-details{font-size:10px;padding:8px 4px}
+ #cats .book-page-heading{margin-bottom:13px}
+ #cats .book-trait-heading{padding:9px 10px;margin-bottom:13px}
+ #cats .bound-tab{box-shadow:inset 0 1px #fff9f0,1px 3px 5px #2d190b4e!important}
+}
+@media(max-width:420px){
+ #cats .book-spread{height:570px}
+ #cats .book-leaf-content{padding:15px 7px 21px}
+ #cats .book-cat-list .cat-image{aspect-ratio:3/4;max-height:190px;padding:3px}
+ #cats .book-cat-list .cat-card{padding:6px}
+}
+@media(prefers-reduced-motion:reduce){
+ #cats .book-cat-list .cat-card,#cats .bound-tab{transition:none}
+}
+
 </style>
 </head>
 <body>
