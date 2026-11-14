@@ -859,163 +859,78 @@ html.ct-adapt-lite .ct-depth-4{animation:ctBreezeD 22s ease-in-out infinite alte
  #cat-dialog>h2{font-size:21px}
 }
 
-/* CATTAIL book folio & portrait layout v2 */
-/* Warm watercolor paper, a readable gutter, and quiet layered page edges.
-   Reuses the site's own subtle raster paper texture; no SVG artwork or heavy filters. */
-#cats .book-spread{height:650px;filter:drop-shadow(0 13px 18px rgba(29,17,10,.28))}
-#cats .book-spread::before{
- background:linear-gradient(180deg,#f4e2c9 0%,#d2b390 55%,#9f775a 100%);
- border:1px solid #ac8a6d;
- box-shadow:0 3px 0 #e9d4b8,0 6px 0 #bb9879,0 9px 0 #f2e2c9,0 12px 15px #26150d61;
-}
-#cats .book-base,#cats .book-base-right,
-#cats .leaf-face{
- background-color:#f9f0e2;
- background-image:
-   radial-gradient(ellipse at 44% 36%,rgba(255,255,255,.35),transparent 62%),
-   linear-gradient(90deg,rgba(139,89,52,.10),rgba(255,250,239,.04) 14%,rgba(255,250,239,.10) 82%,rgba(130,82,48,.14)),
-   var(--ct-paper-texture);
- background-position:center;
- background-size:cover;
- background-repeat:no-repeat;
- border-color:#d7bda1;
- color:#56402e;
-}
-#cats .leaf-front{
- box-shadow:inset 14px 0 19px #fff9ed91,inset -15px 0 23px #79543825,inset 0 0 0 2px #fffdf56b;
-}
-#cats .leaf-back{
- box-shadow:inset 19px 0 24px #7753392a,inset -9px 0 18px #fff9edbb,inset 0 0 0 2px #fffdf56b;
-}
-#cats .book-center-spine{
- left:calc(50% - 11px);width:22px;
- background:linear-gradient(90deg,transparent 0%,#61422e18 13%,#52362255 43%,#38251b49 51%,#fff8e68c 77%,transparent 100%);
- box-shadow:none;
-}
-#cats .book-leaf-content{box-sizing:border-box;padding:27px 21px 31px;scrollbar-color:#c4a384 transparent;scrollbar-width:thin;overscroll-behavior:contain}
-#cats .book-page-heading{margin-bottom:20px;color:#a08060;letter-spacing:.07em}
-#cats .book-trait-heading{
- border:1px solid #d3b99b;border-radius:5px 12px 8px 10px;
- padding:14px 17px;
- background:linear-gradient(125deg,#f2e0c8d9,#fff8e9d9);
- box-shadow:inset 0 1px #fffdf7,0 3px 9px #8e6a4930;
-}
-#cats .book-trait-heading h3{color:#714d36}
-#cats .book-trait-heading p{color:#80654f}
-#cats .book-back-content{color:#604430}
-#cats .book-back-content h3{color:#774f37}
-#cats .book-back-content p{color:#80664f}
-/* Turn the index into stitched fabric / thick handmade-paper tabs, not acrylic buttons. */
-#cats .bound-tab{
- background:
-   repeating-linear-gradient(35deg,rgba(255,255,255,.18) 0 1px,transparent 1px 5px),
-   linear-gradient(140deg,#fff8e0bd 0%,var(--tab-color) 47%,#b69a7ec7 100%)!important;
- -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
- border:1px solid #a98c71!important;
- color:#49362b!important;
- border-radius:5px 11px 11px 5px!important;
- text-shadow:0 1px 0 #fff8edaa;
- box-shadow:inset 0 1px 0 #fffdf3cc,inset 0 -3px 3px #8d6c4d2b,2px 4px 7px #3420145c!important;
- filter:none;
-}
-#cats .bound-tab-left{border-radius:11px 5px 5px 11px!important}
-#cats .bound-tab-right{border-radius:5px 11px 11px 5px!important}
-#cats .bound-tab::after{
- content:"";inset:3px;left:3px;right:3px;top:3px;height:auto;
- border:1px dashed #94796084;border-radius:5px;background:none;
- pointer-events:none;
-}
-#cats .current-leaf .bound-tab-left{
- background:repeating-linear-gradient(35deg,#ffffff18 0 1px,transparent 1px 5px),
- linear-gradient(120deg,#f7dfbe,var(--tab-color) 55%,#bb9673)!important;
- color:#38271c!important;
- box-shadow:inset 0 1px 0 #fff9f0,3px 5px 9px #321b1059!important;
-}
-#cats .bound-tab:hover{filter:brightness(1.045);box-shadow:inset 0 1px #fff8eb,2px 5px 9px #2d190b61!important}
-/* Portrait / text folio: one compact card must be readable within a single page. */
-#cats .book-cat-list{gap:13px}
-#cats .book-cat-list .cat-card{
- display:grid;grid-template-columns:minmax(108px,36%) minmax(0,1fr);
- align-items:start;gap:14px;padding:13px;
- border:1px solid #d6bea1;border-radius:10px 14px 11px 12px;
- background:linear-gradient(138deg,#fff9ef,#f4e5d1);
- box-shadow:0 3px 0 #ccb39455,0 7px 15px #6a482c25;
- min-width:0;box-sizing:border-box;
-}
-#cats .book-cat-list .cat-image{
- align-self:start;display:flex;align-items:center;justify-content:center;
- box-sizing:border-box;min-width:0;width:100%;min-height:0;height:auto;max-height:none;
- aspect-ratio:3 / 4;overflow:hidden;
- padding:7px;border:1px solid #cdb494;border-radius:5px 9px 7px 7px;
- background:linear-gradient(145deg,#f4e5cf,#dfc7ab);
- box-shadow:inset 0 0 0 2px #fff6e879,0 3px 8px #50301a22;
-}
-#cats .book-cat-list .cat-image img{
- display:block;width:100%;height:100%;max-width:100%;max-height:100%;
- object-fit:contain;object-position:center;flex:none;border-radius:3px;
- box-shadow:none;
-}
-#cats .book-cat-list .cat-body{
- display:flex;flex-direction:column;align-items:flex-start;
- min-width:0;height:100%;box-sizing:border-box;
- padding:2px 0;
-}
-#cats .book-cat-list .cat-body h3{font-size:clamp(15px,1.55vw,19px);line-height:1.35;overflow-wrap:anywhere;margin:0 0 6px;color:#593d2a}
-#cats .book-cat-list .cat-member-role{font-size:10px;line-height:1.45;margin:0 0 8px}
-#cats .book-cat-list .tags{gap:5px;margin-bottom:8px}
-#cats .book-cat-list .tag{font-size:10px;line-height:1.4;padding:3px 7px}
-#cats .book-cat-list .cat-card-intro{
- display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;
- overflow:hidden;white-space:pre-line;font-size:12px;line-height:1.68;
- margin:2px 0 12px!important;overflow-wrap:anywhere;
-}
-#cats .book-cat-list .cat-details{
- display:block;float:none;width:100%;min-width:0;margin: auto 0 0;
- padding:9px 7px;border-radius:7px;font-size:11px;
- background:#dfbea0;color:#4b3124;
-}
-#cats .book-cat-list .cat-details:hover{background:#d6ac88}
-/* Tablet: keep the side-by-side folio but reduce the image share and line count. */
-@media(min-width:741px) and (max-width:1000px){
- #cats .book-spread{height:630px}
- #cats .book-leaf-content{padding:22px 13px 27px}
- #cats .book-cat-list .cat-card{grid-template-columns:minmax(86px,38%) minmax(0,1fr);gap:10px;padding:10px}
- #cats .book-cat-list .cat-image{padding:5px}
- #cats .book-cat-list .cat-body h3{font-size:15px}
- #cats .book-cat-list .tag{font-size:9px;padding:2px 6px}
- #cats .book-cat-list .cat-card-intro{-webkit-line-clamp:3;font-size:11px}
- #cats .book-cat-list .cat-details{font-size:10px;padding:8px 3px}
-}
-/* Narrow screens: stay on one column, with a much shorter portrait and no clipped text. */
+/* CATTAIL PHOTO FIRST ALBUM v3 — large original photos and biographies on opposing pages. */
+#cats .wrapper{width:min(1870px,calc(100% - 30px));max-width:none}
+#cats .cat-book-toolbar{max-width:1580px;margin:0 auto 14px}
+#cats .album-pan-tools{max-width:1580px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#e8cfb9;font-size:12px}
+#cats .album-pan-tools>div{display:flex;gap:8px;flex:none}
+#cats .album-pan-tools button{padding:8px 13px;background:#f0dac0;border:1px solid #a77f61;color:#543b2b;font-size:12px;border-radius:8px;font-weight:800}
+#cats .album-pan-tools button:hover{background:#bdd8cb}
+#cats .album-scroll{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#c49b76 #35241c;overscroll-behavior-x:contain;scroll-behavior:smooth;padding:18px 6px 26px}
+#cats .physical-book{width:100%;max-width:1760px;min-width:1300px;--tabW:70px;padding:0 var(--tabW);margin:0 auto;box-sizing:border-box}
+#cats .book-spread{height:1020px;filter:drop-shadow(0 15px 20px #23130d69)}
+#cats .book-spread::before{background:linear-gradient(180deg,#e8d4b7,#b79070);border:1px solid #a17a5e;box-shadow:0 4px #ecd6ba,0 8px #b8977a,0 12px #f0dec8,0 18px 21px #27170e66}
+#cats .book-base,#cats .book-base-right,#cats .leaf-face{background-color:#f8efdf;background-image:radial-gradient(ellipse at 50% 22%,#fffdf48a,transparent 75%),linear-gradient(90deg,#b28a691c,transparent 15%,transparent 85%,#a37b562a),var(--ct-paper-texture);background-position:center;background-size:cover;border-color:#d0b99d;color:#593e2e}
+#cats .leaf-front{box-shadow:inset 9px 0 15px #fff9edb5,inset -21px 0 26px #74503a37}
+#cats .leaf-back{box-shadow:inset 23px 0 28px #6748313d,inset -8px 0 18px #fff9edb3}
+#cats .book-center-spine{left:calc(50% - 14px);width:28px;background:linear-gradient(90deg,transparent,#6e4d3333 20%,#5038237a 46%,#fff8e0b0 74%,transparent)}
+#cats .book-leaf-content{box-sizing:border-box;height:100%;padding:29px 26px 36px;overflow-x:hidden;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#bfa084 transparent;overscroll-behavior:contain}
+#cats .book-base-right{overflow-y:auto;scrollbar-width:thin}
+#cats .book-page-heading{margin-bottom:15px;color:#9d765b}
+#cats .book-trait-heading{padding:11px 16px;margin-bottom:14px;background:#f2e1ccd9;border:1px solid #d3b79a;border-radius:8px 13px 9px 11px}
+#cats .book-trait-heading h3{color:#79523c}
+#cats .book-trait-heading p{color:#866b55}
+#cats .book-back-content.facing-member{height:auto;display:block;text-align:left;padding:14px 5px;max-width:540px;margin:0 auto;color:#5e4331}
+#cats .facing-kicker{font-size:11px;color:#a67d5b;letter-spacing:.11em;text-align:center;margin:0 0 17px}
+#cats .facing-member>h3{font-size:clamp(30px,3vw,41px);text-align:center;color:#68442d;margin:0 0 5px;line-height:1.3}
+#cats .facing-role{text-align:center;color:#8f694f;font-size:13px;margin:0 0 17px}
+#cats .facing-tags{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:0 0 23px}
+#cats .facing-tags span{background:#dce9dd;color:#52634e;padding:4px 10px;border-radius:99px;font-size:12px}
+#cats .facing-section{margin-bottom:17px;padding:13px 17px;background:#fff5e3ad;border:1px solid #dac3a7;border-radius:8px 13px 8px 11px;box-shadow:0 3px 8px #6240251c}
+#cats .facing-section h4{color:#976d50;margin:0 0 7px;font-size:13px}
+#cats .facing-section p{color:#593f2e;margin:0;font-size:14px;line-height:1.85;white-space:pre-line;overflow-wrap:anywhere}
+#cats .facing-quote{margin:18px 0;padding:15px 19px;border-left:4px solid #bdd8cb;background:#ead8c1;color:#684733;white-space:pre-line}
+#cats .facing-none{font-size:16px;text-align:center;color:#745740;margin:40px 0}
+#cats .book-cat-list{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+#cats .cat-book-count{font-size:12px!important;text-align:center;color:#856447!important;margin:0!important}
+#cats .book-cat-list .cat-card{display:flex;flex-direction:column;align-items:center;gap:9px;box-sizing:border-box;min-width:0;padding:15px 21px 17px;background:#fff8ee;border:1px solid #d4b99a;border-radius:11px 15px 10px 13px;box-shadow:0 3px 0 #c6a98851,0 8px 17px #5b3d2524}
+#cats .book-portrait-heading{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap}
+#cats .book-portrait-heading h3{font-size:clamp(20px,2vw,27px);color:#593f2c;margin:0;line-height:1.45}
+#cats .book-portrait-heading .cat-member-role{margin:0;font-size:11px}
+#cats .book-cat-list .cat-image{width:min(100%,460px);max-height:none;min-height:0;height:auto;aspect-ratio:2/3;box-sizing:border-box;padding:7px;background:radial-gradient(ellipse at center,#f6ead9,#dec1a4);border:1px solid #c6a585;border-radius:6px;box-shadow:inset 0 0 0 2px #fff9ed8a,0 6px 13px #62432c31;overflow:hidden}
+#cats .book-cat-list .cat-image.landscape{aspect-ratio:4/3;width:min(100%,520px)}
+#cats .book-cat-list .cat-image img{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;display:block;box-shadow:none;border-radius:3px}
+#cats .cat-photo-placeholder{font-size:48px;color:#faecd9}
+#cats .book-cat-list .tags{justify-content:center;gap:6px;margin:0}
+#cats .book-cat-list .tag{font-size:11px;padding:3px 9px}
+#cats .album-view-button{float:none;width:min(100%,430px);border:0;border-radius:8px;background:#dfbb99;color:#543829;font-size:12px;font-weight:800;padding:10px;cursor:pointer}
+#cats .album-view-button:hover{background:#bdd8cb}
+#cats .album-pager{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:4px 0;padding:5px 0;color:#856447;font-size:12px}
+#cats .album-pager button{float:none;border:1px solid #cfb194;border-radius:9px;background:#f4e1cd;color:#60432e;padding:10px 15px;min-width:90px;font-weight:800;font-size:12px}
+#cats .album-pager button:disabled{opacity:.35;cursor:default}
+#cats .album-pager button:not(:disabled):hover{background:#bdd8cb}
+#cats .book-help{max-width:1000px;text-align:center;color:#ead0b9;font-size:13px;margin:5px auto 0}
+#cats .bound-tab{background:repeating-linear-gradient(35deg,#fff9f323 0 1px,transparent 1px 5px),linear-gradient(135deg,#fff8e1b8,var(--tab-color) 58%,#bd9d7ac9)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border:1px solid #aa886e!important;border-radius:6px 12px 12px 6px!important;color:#49352a!important;text-shadow:0 1px #fff6e7ad;box-shadow:inset 0 1px #fff9ef,inset 0 -2px #9f7e5829,2px 4px 7px #35201657!important;filter:none}
+#cats .bound-tab-left{border-radius:12px 6px 6px 12px!important}
+#cats .bound-tab::after{content:"";inset:3px;height:auto;background:none;border:1px dashed #90715478;border-radius:4px}
+#cats .current-leaf .bound-tab-left{background:linear-gradient(130deg,#ffebcc,var(--tab-color) 68%,#b68f6d)!important;color:#3b291d!important}
+@media(max-width:1250px){#cats .physical-book{min-width:1300px}#cats .book-spread{height:970px}}
 @media(max-width:740px){
- #cats .book-spread{height:590px}
- #cats .book-leaf-content{padding:19px 10px 24px}
- #cats .book-cat-list .cat-card{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:8px}
- #cats .book-cat-list .cat-image{
-  width:100%;height:auto;min-height:0;max-height:230px;
-  aspect-ratio:3/4;padding:5px;align-self:stretch;
- }
- #cats .book-cat-list .cat-image img{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain}
- #cats .book-cat-list .cat-body{height:auto;padding:0 1px 2px}
- #cats .book-cat-list .cat-body h3{font-size:13px}
- #cats .book-cat-list .cat-member-role{font-size:9px;margin-bottom:5px}
- #cats .book-cat-list .tag{font-size:9px;padding:2px 5px}
- #cats .book-cat-list .cat-card-intro{font-size:10px;-webkit-line-clamp:2;margin:1px 0 8px!important}
- #cats .book-cat-list .cat-details{font-size:10px;padding:8px 4px}
- #cats .book-page-heading{margin-bottom:13px}
- #cats .book-trait-heading{padding:9px 10px;margin-bottom:13px}
- #cats .bound-tab{box-shadow:inset 0 1px #fff9f0,1px 3px 5px #2d190b4e!important}
+ #cats .wrapper{width:calc(100% - 16px)}
+ #cats .album-pan-tools{flex-wrap:wrap;align-items:flex-start;gap:8px;padding:0 8px}
+ #cats .album-pan-tools span{font-size:11px}
+ #cats .album-pan-tools button{font-size:11px;padding:7px 11px}
+ #cats .album-scroll{padding:11px 3px 17px}
+ #cats .physical-book{min-width:1160px;--tabW:65px}
+ #cats .book-spread{height:930px}
+ #cats .book-leaf-content{padding:22px 18px 26px}
+ #cats .book-base-right{padding:23px 18px}
+ #cats .book-cat-list .cat-card{padding:12px 19px 14px}
+ #cats .book-cat-list .cat-image{width:min(100%,385px)}
+ #cats .book-cat-list .cat-image.landscape{width:min(100%,460px)}
+ #cats .facing-section p{font-size:13px}
 }
-@media(max-width:420px){
- #cats .book-spread{height:570px}
- #cats .book-leaf-content{padding:15px 7px 21px}
- #cats .book-cat-list .cat-image{aspect-ratio:3/4;max-height:190px;padding:3px}
- #cats .book-cat-list .cat-card{padding:6px}
-}
-@media(prefers-reduced-motion:reduce){
- #cats .book-cat-list .cat-card,#cats .bound-tab{transition:none}
-}
-
+@media(prefers-reduced-motion:reduce){#cats .album-scroll{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -1060,7 +975,9 @@ html.ct-adapt-lite .ct-depth-4{animation:ctBreezeD 22s ease-in-out infinite alte
  </div>
  <label class="cat-book-search"><span>尋找貓咪</span><input id="cat-book-search" type="search" placeholder="輸入名字、職位或個性…" autocomplete="off"></label>
  </div>
- <div class="physical-book" id="cat-book" aria-label="可翻頁貓咪名簿">
+ <div class="album-pan-tools"><span>大張人物畫冊 · 窄螢幕可橫向滑動</span><div><button type="button" data-album-pan="left">看照片</button><button type="button" data-album-pan="right">看右頁介紹</button></div></div>
+<div class="album-scroll" id="album-scroll" tabindex="0" role="region" aria-label="橫向可捲動的大型貓咪名簿">
+<div class="physical-book" id="cat-book" aria-label="可翻頁貓咪名簿">
   <div class="book-spread" id="book-spread">
     <div class="book-base book-base-left" aria-hidden="true"></div>
     <div class="book-base book-base-right">
@@ -1070,7 +987,8 @@ html.ct-adapt-lite .ct-depth-4{animation:ctBreezeD 22s ease-in-out infinite alte
     <div class="book-sheets" id="book-sheets"></div>
     <div class="book-center-spine" aria-hidden="true"></div>
   </div>
-  <p class="book-help">點選彩色個性書籤翻頁；書頁內可上下捲動，查看符合標籤的成員。</p>
+</div>
+<p class="book-help">彩色書籤切換個性，上一位／下一位切換成員；照片在左頁，完整介紹在右頁。</p>
 </div>
 </div></section>
 <section class="section" id="services"><div class="paw-trail" aria-hidden="true"><span>🐾</span><span>🐾</span><span>🐾</span></div><div class="wrapper"><div class="section-head"><div><div class="eyebrow">MENU & SERVICES</div><h2>消費項目</h2><p class="section-desc">所有價格單位均為遊戲內 Gil。部分服務依貓咪的個性及現場情況提供。</p></div></div>
@@ -1175,49 +1093,84 @@ function showCatProfile(cat){
  if(typeof dialog.showModal==="function")dialog.showModal();else dialog.setAttribute("open","");
  if(!portraitsLoaded)loadCatPortraits().then(()=>{if(dialog.open&&document.getElementById("dialog-title").textContent===cat.name){const curr=portrait.querySelector(".cat-profile-no-photo");if(curr&&cat.images.length){const img=document.createElement("img");img.className="cat-profile-image";img.src=cat.images[0];img.alt=cat.name+"的照片";curr.replaceWith(img)}else if(curr)curr.textContent="照片待補"}}).catch(()=>{});
 }
+
+/* Large photo album. A single cat fills the left leaf; full original biography occupies the facing leaf. */
+const bookCursor=new Map();
+function bookMatches(category){
+ const query=(memberSearch?.value||"").trim().toLowerCase();
+ return cats.filter(cat=>(category==="全部"||(category==="特殊服務"?(Boolean(cat.specialService)||(cat.tags||[]).includes("特殊服務")):(cat.tags||[]).includes(category)))&&(activeBookRole==="全部"||cat.role===activeBookRole)&&(!query||[cat.name,cat.role,...(cat.tags||[])].join(" ").toLowerCase().includes(query)));
+}
+function selectedBookCat(category,matches){
+ const list=matches||bookMatches(category);
+ if(!list.length)return null;
+ const index=Math.max(0,Math.min(bookCursor.get(category)||0,list.length-1));
+ bookCursor.set(category,index);return list[index];
+}
+function albumButton(label,callback,disabled=false){
+ const button=document.createElement("button");button.type="button";button.textContent=label;button.disabled=disabled;
+ if(callback&&!disabled)button.addEventListener("click",callback);
+ return button;
+}
 function catCards(category,showPhotos=false){
  const wrap=document.createElement("div");wrap.className="cats book-cat-list";
- const search=(memberSearch?.value||"").trim().toLocaleLowerCase();
- const matches=cats.filter(cat=>{
-  const label=category==="全部"||(category==="特殊服務"?Boolean(cat.specialService)||(cat.tags||[]).includes("特殊服務"):(cat.tags||[]).includes(category));
-  const role=activeBookRole==="全部"||cat.role===activeBookRole;
-  const haystack=[cat.name,cat.role,...(cat.tags||[])].join(" ").toLocaleLowerCase();
-  return label&&role&&(!search||haystack.includes(search));
- });
- const count=document.createElement("p");count.className="cat-book-count";count.textContent="符合條件的貓咪 · "+matches.length+" 位";wrap.append(count);
- if(!matches.length){
-  const empty=document.createElement("div");empty.className="empty";
-  empty.innerHTML='<div class="big" aria-hidden="true">🐾</div><h3>這頁還沒有符合的貓咪</h3><p>可以試試其他個性、職位，或清除搜尋文字。</p>';
-  wrap.append(empty);return wrap;
+ const matches=bookMatches(category),cat=selectedBookCat(category,matches),total=matches.length;
+ const counter=document.createElement("p");counter.className="cat-book-count";counter.textContent="符合分類 · "+total+" 位";wrap.append(counter);
+ if(!cat){
+  const none=document.createElement("div");none.className="empty";none.textContent="沒有符合條件的貓咪。請更換標籤、職位或搜尋文字。";wrap.append(none);return wrap;
  }
- for(const cat of matches){
-  const card=document.createElement("article");card.className="cat-card";card.dataset.member=cat.sourceIndex;
-  const image=document.createElement("div");image.className="cat-image";
-  if(showPhotos&&cat.image){
-   const img=document.createElement("img");img.src=cat.image;img.alt=cat.name+"的照片";
-   img.loading="lazy";img.decoding="async";image.append(img);
-  }else{
-   const placeholder=document.createElement("span");placeholder.className="cat-photo-placeholder";placeholder.setAttribute("aria-hidden","true");placeholder.textContent="✦";image.append(placeholder);
-  }
-  const body=document.createElement("div");body.className="cat-body";
-  const name=document.createElement("h3");name.textContent=cat.name;
-  const role=document.createElement("span");role.className="cat-member-role";role.textContent=cat.role;
-  const tags=document.createElement("div");tags.className="tags";
-  (cat.tags||[]).forEach(t=>{const chip=document.createElement("span");chip.className="tag";chip.textContent=t;tags.append(chip)});
-  if(cat.specialService&&!(cat.tags||[]).includes("特殊服務")){const chip=document.createElement("span");chip.className="tag";chip.textContent="特殊服務";tags.append(chip)}
-  const intro=document.createElement("p");intro.className="cat-card-intro";intro.textContent=cat.personality||cat.intro||"詳細資料待補。";
-  const btn=document.createElement("button");btn.type="button";btn.className="cat-details";btn.textContent="查看完整介紹 →";
-  btn.addEventListener("click",()=>showCatProfile(cat));
-  body.append(name,role,tags,intro,btn);card.append(image,body);wrap.append(card);
+ const article=document.createElement("article");article.className="cat-card";article.dataset.member=cat.sourceIndex;
+ const heading=document.createElement("div");heading.className="book-portrait-heading";
+ const name=document.createElement("h3");name.textContent=cat.name;
+ const role=document.createElement("span");role.className="cat-member-role";role.textContent=cat.role;
+ heading.append(name,role);
+ const image=document.createElement("div");image.className="cat-image";
+ if(showPhotos&&cat.image){
+  const img=document.createElement("img");img.src=cat.image;img.alt=cat.name+"的照片";img.loading="lazy";img.decoding="async";
+  img.addEventListener("load",()=>{if(img.naturalWidth>img.naturalHeight)image.classList.add("landscape")},{once:true});
+  image.append(img);
+ }else{
+  const placeholder=document.createElement("span");placeholder.className="cat-photo-placeholder";placeholder.textContent="✦";image.append(placeholder);
  }
+ const chips=document.createElement("div");chips.className="tags";
+ (cat.tags||[]).forEach(t=>{const chip=document.createElement("span");chip.className="tag";chip.textContent=t;chips.append(chip)});
+ article.append(heading,image,chips);
+ const show=albumButton("放大照片／完整小檔案",()=>showCatProfile(cat));show.className="album-view-button";article.append(show);wrap.append(article);
+ const index=bookCursor.get(category),pager=document.createElement("div");pager.className="album-pager";
+ const prev=albumButton("‹ 上一位",()=>{bookCursor.set(category,index-1);refreshBookChapter(currentChapter,portraitsLoaded)},index===0);
+ const position=document.createElement("span");position.textContent=(index+1)+" / "+total;
+ const next=albumButton("下一位 ›",()=>{bookCursor.set(category,index+1);refreshBookChapter(currentChapter,portraitsLoaded)},index===total-1);
+ pager.append(prev,position,next);wrap.append(pager);
  return wrap;
+}
+function updateFacingBio(){
+ const category=traits[currentChapter][0],cat=selectedBookCat(category);
+ const area=currentChapter===0?document.querySelector("#cats .book-base-right"):physicalLeaves[currentChapter-1]?.querySelector(".leaf-back .book-leaf-content");
+ if(!area)return;
+ const old=area.querySelector(".book-back-content");if(!old)return;
+ const panel=document.createElement("div");panel.className="book-back-content facing-member";
+ const heading=document.createElement("p");heading.className="facing-kicker";heading.textContent="CATTAIL · "+category+" · PROFILE";panel.append(heading);
+ if(cat){
+  const name=document.createElement("h3");name.textContent=cat.name;panel.append(name);
+  const role=document.createElement("p");role.className="facing-role";role.textContent=cat.role;panel.append(role);
+  const tags=document.createElement("div");tags.className="facing-tags";(cat.tags||[]).forEach(t=>{const b=document.createElement("span");b.textContent=t;tags.append(b)});panel.append(tags);
+  for(const [label,val] of [["貓貓介紹",cat.intro],["個性",cat.personality],["喜好",cat.likes],["特殊服務",cat.specialService],["補充",cat.extra]]){
+   if(!val)continue;
+   const s=document.createElement("section");s.className="facing-section";const title=document.createElement("h4");title.textContent=label;
+   const p=document.createElement("p");p.textContent=val;s.append(title,p);panel.append(s);
+  }
+  if(cat.quote){const block=document.createElement("blockquote");block.className="facing-quote";block.textContent=cat.quote;panel.append(block)}
+  if(!cat.intro&&!cat.personality&&!cat.specialService&&!cat.extra){const p=document.createElement("p");p.textContent="成員介紹待補。";panel.append(p)}
+ }else{
+  const p=document.createElement("p");p.className="facing-none";p.textContent="這個分類暫時沒有符合條件的成員。";panel.append(p);
+ }
+ old.replaceWith(panel);area.scrollTop=0;
 }
 function refreshBookChapter(chapter,showPhotos=false){
  const leaf=physicalLeaves[chapter];if(!leaf)return;
  const existing=leaf.querySelector(".book-cat-list");if(!existing)return;
- const replacement=catCards(traits[chapter][0],showPhotos);
- existing.replaceWith(replacement);
+ existing.replaceWith(catCards(traits[chapter][0],showPhotos));
  const viewport=leaf.querySelector(".book-leaf-content");if(viewport)viewport.scrollTop=0;
+ if(chapter===currentChapter)updateFacingBio();
 }
 function loadCatPortraits(){
  if(portraitLoadPromise)return portraitLoadPromise;
@@ -1318,14 +1271,20 @@ async function turnTo(target){
  bookBusy=false;
 }
 syncBook();
+updateFacingBio();
 
 const bookRoleButtons=[...document.querySelectorAll("[data-book-role]")];
 bookRoleButtons.forEach(button=>button.addEventListener("click",()=>{
- activeBookRole=button.dataset.bookRole;
+ activeBookRole=button.dataset.bookRole;bookCursor.clear();
  bookRoleButtons.forEach(b=>b.setAttribute("aria-pressed",String(b===button)));
  refreshBookChapter(currentChapter,portraitsLoaded);
 }));
-memberSearch.addEventListener("input",()=>refreshBookChapter(currentChapter,portraitsLoaded));
+memberSearch.addEventListener("input",()=>{bookCursor.clear();refreshBookChapter(currentChapter,portraitsLoaded)});
+const albumScroll=document.getElementById("album-scroll");
+document.querySelectorAll("[data-album-pan]").forEach(button=>button.addEventListener("click",()=>{
+ const left=button.dataset.albumPan==="left"?0:Math.max(0,document.getElementById("book-spread").offsetWidth/2-albumScroll.clientWidth/3);
+ albumScroll.scrollTo({left,behavior:reduceMotion.matches?"instant":"smooth"});
+}));
 if("IntersectionObserver" in window){
  const io=new IntersectionObserver(entries=>{
   if(entries.some(entry=>entry.isIntersecting)){io.disconnect();loadCatPortraits()}
