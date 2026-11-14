@@ -931,6 +931,65 @@ html.ct-adapt-lite .ct-depth-4{animation:ctBreezeD 22s ease-in-out infinite alte
  #cats .facing-section p{font-size:13px}
 }
 @media(prefers-reduced-motion:reduce){#cats .album-scroll{scroll-behavior:auto}}
+
+/* CATTAIL visual-size correction v4 — proportions checked at 1440, 1024, and 390px.
+   Book size is restrained while the actual portrait remains a focal point. */
+#cats .wrapper{width:min(1340px,calc(100% - 30px));max-width:none}
+#cats .physical-book{max-width:1220px;min-width:1080px;--tabW:57px;padding:0 var(--tabW)}
+#cats .book-spread{height:870px}
+#cats .book-leaf-content{padding:20px 19px 25px}
+#cats .book-base-right{padding:21px 19px}
+#cats .book-page-heading{margin-bottom:10px}
+#cats .book-trait-heading{padding:8px 12px;margin-bottom:10px}
+#cats .book-cat-list{gap:8px}
+#cats .book-cat-list .cat-card{padding:10px 16px 11px;gap:7px}
+#cats .book-cat-list .cat-image{
+ width:min(100%,355px);height:520px;aspect-ratio:auto;
+ max-height:none;min-height:0;
+}
+#cats .book-cat-list .cat-image.landscape{width:min(100%,425px);height:318px;aspect-ratio:auto}
+#cats .book-cat-list .cat-image img{width:100%;height:100%;object-fit:contain}
+#cats .book-portrait-heading h3{font-size:clamp(18px,1.8vw,23px)}
+#cats .book-cat-list .tags{gap:5px}
+#cats .book-cat-list .tag{font-size:10px;padding:2px 7px}
+#cats .album-view-button{padding:8px 10px}
+#cats .album-pager{margin:2px 0;padding:2px 0}
+#cats .album-pager button{padding:8px 11px}
+#cats .facing-member{padding:8px 2px}
+#cats .facing-section{margin-bottom:12px;padding:11px 15px}
+#cats .facing-section p{font-size:13px;line-height:1.8}
+#cats .facing-tags{margin-bottom:16px}
+#cats .facing-kicker{margin-bottom:12px}
+#cats .facing-member>h3{font-size:clamp(26px,2.8vw,36px)}
+@media(max-width:1250px){
+ #cats .physical-book{min-width:1080px}
+ #cats .book-spread{height:870px}
+}
+@media(max-width:740px){
+ #cats .wrapper{width:calc(100% - 16px)}
+ #cats .album-scroll{padding:11px 3px 17px}
+ #cats .physical-book{min-width:800px;--tabW:28px;padding:0 var(--tabW)}
+ #cats .book-spread{height:755px}
+ #cats .book-leaf-content{padding:15px 12px 19px}
+ #cats .book-base-right{padding:16px 13px}
+ #cats .book-page-heading{margin-bottom:9px}
+ #cats .book-trait-heading{padding:8px 10px;margin-bottom:9px}
+ #cats .book-cat-list .cat-card{padding:8px 11px;gap:6px}
+ #cats .book-portrait-heading h3{font-size:19px}
+ #cats .book-cat-list .cat-image{width:min(100%,305px);height:425px;aspect-ratio:auto}
+ #cats .book-cat-list .cat-image.landscape{width:min(100%,305px);height:226px}
+ #cats .book-cat-list .tags{gap:4px}
+ #cats .book-cat-list .tag{font-size:9px;padding:2px 6px}
+ #cats .album-view-button{font-size:11px;padding:8px}
+ #cats .album-pager{gap:5px;font-size:11px}
+ #cats .album-pager button{min-width:0;padding:7px 9px;font-size:11px}
+ #cats .facing-section{padding:10px 12px}
+ #cats .facing-section p{font-size:12px}
+}
+@media(max-width:370px){
+ #cats .physical-book{min-width:780px}
+ #cats .book-cat-list .cat-image{width:min(100%,295px);height:420px}
+}
 </style>
 </head>
 <body>
@@ -1282,7 +1341,12 @@ bookRoleButtons.forEach(button=>button.addEventListener("click",()=>{
 memberSearch.addEventListener("input",()=>{bookCursor.clear();refreshBookChapter(currentChapter,portraitsLoaded)});
 const albumScroll=document.getElementById("album-scroll");
 document.querySelectorAll("[data-album-pan]").forEach(button=>button.addEventListener("click",()=>{
- const left=button.dataset.albumPan==="left"?0:Math.max(0,document.getElementById("book-spread").offsetWidth/2-albumScroll.clientWidth/3);
+ const book=document.getElementById("cat-book");
+ const spread=document.getElementById("book-spread");
+ const tabSpace=parseFloat(getComputedStyle(book).paddingLeft)||0;
+ const left=button.dataset.albumPan==="left"
+   ? Math.max(0,tabSpace-8)
+   : Math.min(albumScroll.scrollWidth-albumScroll.clientWidth,tabSpace+spread.offsetWidth/2);
  albumScroll.scrollTo({left,behavior:reduceMotion.matches?"instant":"smooth"});
 }));
 if("IntersectionObserver" in window){
