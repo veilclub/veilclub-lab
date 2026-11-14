@@ -1193,7 +1193,7 @@ function catCards(category,showPhotos=false){
  const chips=document.createElement("div");chips.className="tags";
  (cat.tags||[]).forEach(t=>{const chip=document.createElement("span");chip.className="tag";chip.textContent=t;chips.append(chip)});
  article.append(heading,image,chips);
- const show=albumButton("放大照片／完整小檔案",()=>showCatProfile(cat));show.className="album-view-button";article.append(show);wrap.append(article);
+ wrap.append(article);
  const index=bookCursor.get(category),pager=document.createElement("div");pager.className="album-pager";
  const prev=albumButton("‹ 上一位",()=>{bookCursor.set(category,index-1);refreshBookChapter(currentChapter,portraitsLoaded)},index===0);
  const position=document.createElement("span");position.textContent=(index+1)+" / "+total;
