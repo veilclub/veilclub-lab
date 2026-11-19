@@ -60,3 +60,50 @@ body[data-ct-mode="cat"] #ct-wheel-shell{display:none!important}
  .ct-wheel-help{font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){.ct-wheel-label,.ct-wheel-grooves{transition:none!important}.ct-wheel-runner.running svg{animation:none}}
+
+
+/* Art direction refinement: mature picture-book / light impressionist cat. */
+.ct-wheel-runner .ct-painted-tabby{
+  display:block;width:100%;height:100%;overflow:visible;
+  filter:drop-shadow(0 7px 3px rgba(66,62,48,.27)) saturate(.88) contrast(.98);
+  transform-origin:50% 90%;
+}
+.ct-wheel-runner.running .ct-painted-tabby{animation:ct-paint-run .22s ease-in-out infinite alternate}
+@keyframes ct-paint-run{
+ from{transform:translateY(1px) rotate(-.8deg)}
+ to{transform:translateY(-4px) rotate(.8deg)}
+}
+/* Legible, larger headings that continue to travel on the wheel's circular path. */
+.ct-wheel-label{
+ min-width:28%;max-width:47%;padding:9px 13px;
+ font-size:clamp(13px,1.24vw,16px);
+ letter-spacing:.015em;line-height:1.38;
+ font-weight:800;
+ border-radius:11px 13px 9px 12px;
+ border:1px solid #b99778;
+ background:linear-gradient(150deg,#fff8e9 5%,#f3e5cc 80%,#e7d2b7);
+ box-shadow:0 3px 0 rgba(132,95,66,.31),0 5px 9px rgba(50,31,23,.26);
+}
+.ct-wheel-label.is-selected{
+ min-width:36%;max-width:52%;padding:10px 13px;
+ font-size:clamp(17px,1.66vw,22px);
+ font-weight:800;border-color:#799982;
+ box-shadow:0 0 0 2px #dcebd9,0 4px 0 rgba(119,151,127,.34),0 7px 13px rgba(58,39,31,.23);
+}
+.ct-wheel-assembly:after{
+ content:"";position:absolute;inset:5.5%;z-index:2;pointer-events:none;
+ border-radius:50%;
+ background:repeating-radial-gradient(circle at 32% 26%,transparent 0 7px,rgba(245,234,203,.045) 8px 10px,transparent 11px 19px);
+ mix-blend-mode:soft-light;
+}
+@media(max-width:820px){
+ .ct-wheel-label{font-size:clamp(11px,1.8vw,14px);padding:6px 8px;min-width:26%;max-width:47%}
+ .ct-wheel-label.is-selected{font-size:clamp(15px,3.45vw,19px);padding:8px 10px;min-width:35%;max-width:51%}
+}
+@media(max-width:440px){
+ .ct-wheel-label{font-size:11px;padding:5px 6px;min-width:27%;max-width:49%;line-height:1.35}
+ .ct-wheel-label.is-selected{font-size:16px;padding:7px 9px;min-width:39%;max-width:56%}
+}
+@media(prefers-reduced-motion:reduce){
+ .ct-wheel-runner.running .ct-painted-tabby{animation:none!important}
+}
