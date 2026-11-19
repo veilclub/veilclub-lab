@@ -10,10 +10,12 @@
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
  <link rel="stylesheet" href="assets/cattail-order.css?v=1">
+ <link rel="stylesheet" href="assets/cattail-wheel.css?v=1">
  <script src="assets/cattail-data.js?v=1" defer></script>
- <script src="assets/cattail-order.js?v=1" defer></script>
+ <script src="assets/cattail-order.js?v=2" defer></script>
+ <script src="assets/cattail-wheel.js?v=1" defer></script>
 </head>
-<body class="ct-order-page">
+<body class="ct-order-page" data-ct-mode="service">
 <header class="ct-order-header">
  <nav class="ct-nav ct-wrap" aria-label="貓尾草導覽">
   <a href="index.html" class="ct-brand" aria-label="貓尾草首頁">
@@ -38,7 +40,7 @@
   <div>
    <span class="ct-eyebrow">CATTAIL / THE LITTLE ORDER BOOK</span>
    <h1 id="ct-title">貓咪點餐冊</h1>
-   <p>來看看貓咪們準備了什麼。挑張卡片，抽出來慢慢看。<br>每一項都以遊戲內 Gil 計價，服務內容依現場情況安排。</p>
+   <p>來看看貓咪們準備了什麼。轉轉跑輪，或翻翻貓咪的限定服務卡片。<br>每一項都以遊戲內 Gil 計價，服務內容依現場情況安排。</p>
   </div>
   <div class="ct-intro-art" aria-hidden="true">
    <svg viewBox="0 0 190 205" fill="none" stroke="#926c50" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
@@ -54,14 +56,42 @@
   <div class="ct-section-title">
    <div>
     <span class="ct-eyebrow">FLIP THROUGH THE CARDS</span>
-    <h2 id="ct-mode-title">翻翻貓咪的卡片</h2>
-    <p id="ct-mode-description">挑一張卡片，看看貓咪今天準備了什麼。</p>
+    <h2 id="ct-mode-title">貓咪的消費項目</h2>
+    <p id="ct-mode-description">轉動跑輪，挑選一般消費項目。</p>
    </div>
    <div class="ct-mode-tabs" role="group" aria-label="消費分類">
     <button type="button" data-mode="service" aria-pressed="true">一般消費</button>
     <button type="button" data-mode="cat" aria-pressed="false">貓咪限定服務</button>
    </div>
   </div>
+
+
+  <section class="ct-wheel-shell" id="ct-wheel-shell" aria-label="一般消費項目跑輪">
+   <div class="ct-wheel-grid">
+    <div class="ct-wheel-scene" id="ct-wheel-scene">
+     <div class="ct-wheel-support" aria-hidden="true"></div>
+     <div class="ct-wheel-assembly" id="ct-wheel-assembly" aria-label="木製貓咪跑輪">
+      <div class="ct-wheel-grooves" id="ct-wheel-grooves" aria-hidden="true"></div>
+      <div class="ct-wheel-labels" id="ct-wheel-labels" aria-live="off"></div>
+      <div class="ct-wheel-runner" id="ct-wheel-runner"></div>
+      <div class="ct-wheel-axle" aria-hidden="true"></div>
+     </div>
+     <div class="ct-wheel-actions">
+      <button id="ct-wheel-prev" type="button" aria-label="上一項服務">‹</button>
+      <button id="ct-wheel-next" type="button" aria-label="下一項服務">›</button>
+     </div>
+    </div>
+    <aside class="ct-wheel-ticket" aria-live="polite" aria-label="目前選擇的消費項目">
+     <small>CATTAIL / MENU <span id="ct-wheel-counter">01 / 06</span></small>
+     <h3 id="ct-wheel-title">特級優質罐罐</h3>
+     <p class="ct-wheel-description" id="ct-wheel-description">投餵罐罐也許能增進感情，但請勿將店內貓咪餵成卡車。</p>
+     <p class="ct-wheel-note" id="ct-wheel-note">貓咪會不會靠近，還是得看牠當天的心情。</p>
+     <div class="ct-wheel-price"><span>單項價格</span><strong id="ct-wheel-price">30,000 Gil</strong></div>
+     <button id="ct-wheel-add" class="ct-wheel-add" type="button">加入消費清單</button>
+    </aside>
+   </div>
+   <p class="ct-wheel-help">左右滑動跑輪或點選箭頭切換項目，貓咪會跟著跑幾步。</p>
+  </section>
 
   <section class="ct-browse" id="ct-browse" aria-label="消費卡片">
    <div class="ct-browse-top">
