@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta name="theme-color" content="#3f2f27">
+ <meta name="description" content="貓尾草 CATTAIL｜翻閱貓咪消費卡片、查看限定服務與遊戲內 Gil 價目。">
+ <title>消費點餐冊｜貓尾草 CATTAIL</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="assets/cattail-order.css?v=1">
+ <script src="assets/cattail-data.js?v=1" defer></script>
+ <script src="assets/cattail-order.js?v=1" defer></script>
+</head>
+<body class="ct-order-page">
+<header class="ct-order-header">
+ <nav class="ct-nav ct-wrap" aria-label="貓尾草導覽">
+  <a href="index.html" class="ct-brand" aria-label="貓尾草首頁">
+   <span class="ct-mark" aria-hidden="true">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+     <path d="M13 29 L17 11 L30 20 Q34 19 38 20 L51 11 L53 31 Q55 50 33 53 Q11 54 13 29Z"/>
+     <path d="M25 36 L27 36 M40 36 L42 36 M31 42 Q33 45 35 42 M18 45 L7 44 M47 45 L58 43"/>
+    </svg>
+   </span>
+   <span>貓尾草 <em>CATTAIL</em></span>
+  </a>
+  <div class="ct-navlinks">
+   <a href="index.html">首頁</a>
+   <a href="index.html#cats">貓咪名簿</a>
+   <a href="order.html" class="ct-current" aria-current="page">點餐冊</a>
+   <a href="https://discord.gg/u3mV7mMDXP" target="_blank" rel="noopener noreferrer" class="ct-discord">Discord</a>
+  </div>
+ </nav>
+</header>
+<main class="ct-main ct-wrap" id="ct-order">
+ <section class="ct-intro" aria-labelledby="ct-title">
+  <div>
+   <span class="ct-eyebrow">CATTAIL / THE LITTLE ORDER BOOK</span>
+   <h1 id="ct-title">貓咪點餐冊</h1>
+   <p>來看看貓咪們準備了什麼。挑張卡片，抽出來慢慢看。<br>每一項都以遊戲內 Gil 計價，服務內容依現場情況安排。</p>
+  </div>
+  <div class="ct-intro-art" aria-hidden="true">
+   <svg viewBox="0 0 190 205" fill="none" stroke="#926c50" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="#f5dfc2" d="M48 73 L53 19 L91 51 Q107 46 120 52 L157 18 L157 77 C178 108 169 154 134 174 Q94 192 56 170 C17 145 18 101 48 73 Z"/>
+    <path d="M68 111 q9 -11 18 0 m29 0 q9 -11 18 0 M91 130 Q100 136 109 130 M100 132 v9 q-11 11 -19 0 m19 0 q10 10 19 0 M48 130 l-25 -6 M48 142 l-28 5 M151 130 l23 -7 M151 141 l27 7"/>
+    <path d="M65 190 Q102 200 138 188" stroke="#d3ab87"/>
+    <path d="M56 73 l4 -33 23 20 M124 60 l27 -24 -1 37" stroke="#d3ab87"/>
+   </svg>
+  </div>
+ </section>
+
+ <section aria-labelledby="ct-mode-title">
+  <div class="ct-section-title">
+   <div>
+    <span class="ct-eyebrow">FLIP THROUGH THE CARDS</span>
+    <h2 id="ct-mode-title">翻翻貓咪的卡片</h2>
+    <p id="ct-mode-description">挑一張卡片，看看貓咪今天準備了什麼。</p>
+   </div>
+   <div class="ct-mode-tabs" role="group" aria-label="消費分類">
+    <button type="button" data-mode="service" aria-pressed="true">一般消費</button>
+    <button type="button" data-mode="cat" aria-pressed="false">貓咪限定服務</button>
+   </div>
+  </div>
+
+  <section class="ct-browse" id="ct-browse" aria-label="消費卡片">
+   <div class="ct-browse-top">
+    <span id="ct-browse-label">MENU / ALL SERVICES</span>
+    <span>SWIPE · DRAG · PICK</span>
+   </div>
+   <div class="ct-stage-frame">
+    <button type="button" id="ct-prev" class="ct-arrow prev" aria-label="上一張卡片">‹</button>
+    <div class="ct-stage" id="ct-stage" tabindex="0" aria-label="可左右滑動的消費卡片"></div>
+    <button type="button" id="ct-next" class="ct-arrow next" aria-label="下一張卡片">›</button>
+   </div>
+   <div class="ct-browse-bottom">
+    <div class="ct-pager" id="ct-dots" aria-label="卡片頁碼"></div>
+    <div class="ct-browse-action">
+     <div class="ct-now"><small><span id="ct-counter-label">貓咪消費項目</span> · <span id="ct-counter">01 / 06</span></small><strong id="ct-current-name">特級優質罐罐</strong></div>
+     <button class="ct-primary" type="button" id="ct-open">抽出這張卡片</button>
+    </div>
+   </div>
+  </section>
+
+  <section class="ct-detail" id="ct-detail" hidden aria-label="卡片與服務內容">
+   <div class="ct-detail-head"><span>CATTAIL · A CLOSER LOOK</span><span>一張卡片，一份小小的約定</span></div>
+   <div class="ct-pinned-grid">
+    <div class="ct-board">
+     <div id="ct-display-slot" class="ct-display-slot"></div>
+     <div id="ct-paw-stamp" class="ct-paw-stamp" aria-hidden="true">
+      <svg viewBox="0 0 100 100"><ellipse cx="48" cy="63" rx="25" ry="19"/><ellipse cx="20" cy="40" rx="10" ry="13" transform="rotate(-15 20 40)"/><ellipse cx="42" cy="28" rx="9" ry="13"/><ellipse cx="63" cy="28" rx="9" ry="13" transform="rotate(8 63 28)"/><ellipse cx="83" cy="42" rx="9" ry="12" transform="rotate(18 83 42)"/></svg>
+     </div>
+    </div>
+    <article class="ct-paper" id="ct-paper" aria-live="polite"></article>
+   </div>
+  </section>
+ </section>
+
+ <section class="ct-cart" id="ct-cart" aria-labelledby="ct-cart-heading">
+  <div class="ct-cart-head"><h2 id="ct-cart-heading">我的消費清單</h2><span>已選 <b id="ct-cart-amount">0</b> 項</span></div>
+  <div class="ct-cart-body">
+   <div>
+    <p id="ct-cart-empty" class="ct-cart-empty">還沒有挑選項目。選好卡片後，可以先加進這份清單。</p>
+    <div class="ct-cart-lines" id="ct-cart-lines" aria-live="polite"></div>
+   </div>
+   <aside class="ct-cart-side">
+    <div class="ct-cart-sum"><span>選購小計</span><strong id="ct-cart-total">0 Gil</strong></div>
+    <p class="ct-cart-disclaimer">入場費另計 50,000 Gil，含當日套餐一份。合照加購貓咪及限定服務細節請與櫃台確認。</p>
+    <div class="ct-cart-actions">
+     <button class="ct-copy" id="ct-copy" type="button" disabled>複製清單</button>
+     <a class="ct-discord-link" href="https://discord.gg/u3mV7mMDXP" target="_blank" rel="noopener noreferrer">前往 Discord</a>
+    </div>
+    <span class="ct-copy-status" id="ct-copy-status" role="status" aria-live="polite"></span>
+    <p class="ct-cart-disclaimer">這裡只幫你整理想購買的項目，不會送出訂單，也不會線上扣款。</p>
+   </aside>
+  </div>
+ </section>
+ <p class="ct-end-note">貓咪們各有各的脾氣，任何互動都以牠們當天的意願為準。</p>
+</main>
+</body>
+</html>
