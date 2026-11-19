@@ -138,7 +138,10 @@ function setActive(i){
 }
 function setMode(next){
  if(!["service","cat"].includes(next))return;
- if(phase!=="BROWSE")restoreBrowse({instant:true,focus:false});
+ if(phase!=="BROWSE"){
+  history.replaceState({ctBrowse:true},"",basePath);
+  restoreBrowse({instant:true,focus:false});
+ }
  if(next===mode)return;
  mode=next;active=0;dragFraction=0;renderBrowse();
  modeButtons.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode===mode)));
