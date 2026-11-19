@@ -62,16 +62,19 @@ body[data-ct-mode="cat"] #ct-wheel-shell{display:none!important}
 @media(prefers-reduced-motion:reduce){.ct-wheel-label,.ct-wheel-grooves{transition:none!important}.ct-wheel-runner.running svg{animation:none}}
 
 
-/* Art direction refinement: mature picture-book / light impressionist cat. */
-.ct-wheel-runner .ct-painted-tabby{
-  display:block;width:100%;height:100%;overflow:visible;
-  filter:drop-shadow(0 7px 3px rgba(66,62,48,.27)) saturate(.88) contrast(.98);
-  transform-origin:50% 90%;
+/* Hand-inked watercolour on the original animated eight-frame running outline.
+   Shading remains clipped to each frame; it cannot hide the changing feet. */
+.ct-wheel-runner .ct-painted-runner{
+ display:block;width:100%;height:100%;overflow:visible;
+ filter:drop-shadow(0 5px 3px rgba(57,52,43,.26)) saturate(.91);
+ transform-origin:52% 85%;
 }
-.ct-wheel-runner.running .ct-painted-tabby{animation:ct-paint-run .22s ease-in-out infinite alternate}
-@keyframes ct-paint-run{
- from{transform:translateY(1px) rotate(-.8deg)}
- to{transform:translateY(-4px) rotate(.8deg)}
+.ct-wheel-runner.running .ct-painted-runner{
+ animation:ct-gait-microbounce .27s ease-in-out infinite alternate;
+}
+@keyframes ct-gait-microbounce{
+ from{transform:translateY(1px) rotate(-.4deg)}
+ to{transform:translateY(-3px) rotate(.4deg)}
 }
 /* Legible, larger headings that continue to travel on the wheel's circular path. */
 .ct-wheel-label{
@@ -106,5 +109,5 @@ body[data-ct-mode="cat"] #ct-wheel-shell{display:none!important}
  .ct-wheel-label.is-selected{font-size:16px;padding:7px 9px;min-width:39%;max-width:56%}
 }
 @media(prefers-reduced-motion:reduce){
- .ct-wheel-runner.running .ct-painted-tabby{animation:none!important}
+ .ct-wheel-runner.running .ct-painted-runner{animation:none!important}
 }
