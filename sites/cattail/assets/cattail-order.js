@@ -144,8 +144,9 @@ function setMode(next){
  }
  if(next===mode)return;
  mode=next;active=0;dragFraction=0;renderBrowse();
+ document.body.dataset.ctMode=mode;
  modeButtons.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode===mode)));
- $("ct-mode-description").textContent=mode==="service"?"挑一張卡片，看看貓咪今天準備了什麼。":"有些服務只由特定貓咪提供。先挑貓咪，再看看牠能做些什麼。";
+ $("ct-mode-description").textContent=mode==="service"?"轉動跑輪，挑選一般消費項目。":"有些服務只由特定貓咪提供。先挑貓咪，再看看牠能做些什麼。";
  $("ct-browse-label").textContent=mode==="service"?"MENU / ALL SERVICES":"CATTAIL / LIMITED SERVICES";
  $("ct-counter-label").textContent=mode==="service"?"貓咪消費項目":"貓咪限定服務";
 }
@@ -303,6 +304,10 @@ async function copyCart(){
  }
  $("ct-copy-status").textContent=success?"已複製消費清單。":"無法自動複製，請使用瀏覽器的複製功能。";
 }
+window.addEventListener("cattail:add-service",event=>{
+ const entry=serviceEntries.find(s=>s.id===event.detail?.id);
+ if(entry)addToCart(entry);
+});
 modeButtons.forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
 dots.addEventListener("keydown",e=>{if(e.key==="ArrowRight")setActive(active+1);else if(e.key==="ArrowLeft")setActive(active-1)});
 $("ct-prev").addEventListener("click",()=>setActive(active-1));
@@ -367,6 +372,7 @@ window.addEventListener("resize",()=>{if(phase==="BROWSE")positionCards()});
 window.addEventListener("popstate",syncFromLocation);
 $("ct-copy").addEventListener("click",copyCart);
 renderBrowse();renderCart();
+document.body.dataset.ctMode=mode;
 loadPortraits();
 if(location.hash)syncFromLocation();
 else history.replaceState({ctBrowse:true},"",basePath);
