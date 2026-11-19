@@ -79,6 +79,7 @@ body[data-ct-mode="cat"] #ct-wheel-shell{display:none!important}
  font-size:clamp(13px,1.24vw,16px);
  letter-spacing:.015em;line-height:1.38;
  font-weight:800;
+ transition:transform .7s cubic-bezier(.22,.77,.22,1),opacity .36s ease,font-size .55s ease,padding .55s ease,border-color .3s,box-shadow .3s;
  border-radius:11px 13px 9px 12px;
  border:1px solid #b99778;
  background:linear-gradient(150deg,#fff8e9 5%,#f3e5cc 80%,#e7d2b7);
