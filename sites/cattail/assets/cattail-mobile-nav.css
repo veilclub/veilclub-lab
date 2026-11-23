@@ -1,0 +1,115 @@
+/* CATTAIL / Mobile navigation repair.
+   The menu becomes an actual second row of the header instead of overlaying the mascot. */
+@media (max-width: 690px) {
+  body > header {
+    position: relative;
+    z-index: 100;
+    isolation: isolate;
+    background: #352720;
+  }
+  body > header .nav {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) auto auto;
+    grid-template-rows: minmax(65px,auto) auto;
+    column-gap: 10px;
+    row-gap: 0;
+    height: auto;
+    min-height: 65px;
+    align-items: center;
+  }
+  body > header .brand {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+  body > header .discord-mobile-direct {
+    grid-column: 2;
+    grid-row: 1;
+    margin-left: 0;
+  }
+  body > header .mobile-toggle {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    line-height: 1;
+  }
+  body > header .mobile-toggle[aria-expanded="true"] {
+    color: #352720;
+    background: #bdd8cb;
+    border-color: #dce8de;
+  }
+  body > header .nav-links {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: none;
+    position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+    z-index: auto;
+    width: 100%;
+    max-height: min(62dvh, 470px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding: 10px 0 17px;
+    margin: 0;
+    background: #352720;
+    border: 0;
+    border-top: 1px solid #695144;
+    border-radius: 0;
+    box-shadow: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  body > header .nav-links.open {
+    display: flex;
+  }
+  body > header .nav-links a {
+    display: flex;
+    min-height: 45px;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 15px;
+    border-radius: 10px;
+    color: #f7eee4;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: normal;
+    text-shadow: none;
+  }
+  body > header .nav-links a:hover,
+  body > header .nav-links a:focus-visible {
+    background: #4c392e;
+    color: #cde6d9;
+  }
+  body > header .nav-links .discord-nav-link {
+    display: flex;
+  }
+  body > header .nav-links .pill {
+    background: #76513d;
+    border-radius: 10px;
+    margin-top: 3px;
+    color: #fff4e8;
+  }
+  body > header .nav-links svg {
+    flex-shrink: 0;
+  }
+  .hero .wrapper {
+    z-index: 1;
+  }
+}
+@media (min-width: 691px) {
+  body > header .nav-links {
+    position: static;
+  }
+}
