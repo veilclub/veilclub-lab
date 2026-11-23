@@ -62,19 +62,19 @@ body[data-ct-mode="cat"] #ct-wheel-shell{display:none!important}
 @media(prefers-reduced-motion:reduce){.ct-wheel-label,.ct-wheel-grooves{transition:none!important}.ct-wheel-runner.running svg{animation:none}}
 
 
-/* Hand-inked watercolour on the original animated eight-frame running outline.
-   Shading remains clipped to each frame; it cannot hide the changing feet. */
-.ct-wheel-runner .ct-painted-runner{
- display:block;width:100%;height:100%;overflow:visible;
- filter:drop-shadow(0 5px 3px rgba(57,52,43,.26)) saturate(.91);
- transform-origin:52% 85%;
+/* Six separately painted image layers are composited with a native canvas. */
+.ct-wheel-runner{width:74%;height:42%;bottom:5%;isolation:isolate}
+.ct-wheel-runner .ct-layered-runner{
+ display:block;width:100%;height:100%;object-fit:contain;
+ filter:drop-shadow(0 4px 2px rgba(58,49,39,.23)) saturate(.96);
+ transform-origin:50% 85%;
 }
-.ct-wheel-runner.running .ct-painted-runner{
- animation:ct-gait-microbounce .27s ease-in-out infinite alternate;
+.ct-wheel-runner.running .ct-layered-runner{
+ animation:ct-layered-gait .25s ease-in-out infinite alternate;
 }
-@keyframes ct-gait-microbounce{
- from{transform:translateY(1px) rotate(-.4deg)}
- to{transform:translateY(-3px) rotate(.4deg)}
+@keyframes ct-layered-gait{
+ from{transform:translateY(1px) rotate(-.3deg)}
+ to{transform:translateY(-3px) rotate(.3deg)}
 }
 /* Legible, larger headings that continue to travel on the wheel's circular path. */
 .ct-wheel-label{
@@ -109,5 +109,5 @@ body[data-ct-mode="cat"] #ct-wheel-shell{display:none!important}
  .ct-wheel-label.is-selected{font-size:16px;padding:7px 9px;min-width:39%;max-width:56%}
 }
 @media(prefers-reduced-motion:reduce){
- .ct-wheel-runner.running .ct-painted-runner{animation:none!important}
+ .ct-wheel-runner.running .ct-layered-runner{animation:none!important}
 }
