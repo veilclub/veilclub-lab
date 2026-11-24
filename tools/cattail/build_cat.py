@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """CATTAIL running-cat packer & validator.
 
-Turns one cat's aligned layers (6 full-size PNGs + rig.json) into the web assets
-used by cattail-layered-runner.js, and checks the rig in all 8 gait poses.
+Turns one cat's aligned layers (full-size PNGs + rig.json) into the web assets used by
+cattail-layered-runner.js, and checks the rig in all 8 gait poses (with the tail wave).
 
   python3 tools/cattail/build_cat.py build <cat_dir> --out sites/cattail/assets/cats
   python3 tools/cattail/build_cat.py registry sites/cattail/assets/cats [--default random|<id>] \
@@ -10,21 +10,27 @@ used by cattail-layered-runner.js, and checks the rig in all 8 gait poses.
 
 <cat_dir> layout:
   rig.json
-  layers/body.png  frontNear.png  frontFar.png  rearNear.png  rearFar.png  tail.png
-Every layer is the SAME canvas size (default 2048x1152), already positioned in the
-neutral running pose; layers are not cropped. See SPEC.md.
+  layers/body.png frontNear.png frontFar.png rearNear.png rearFar.png
+         tail1.png tail2.png tail3.png tail4.png      (segmented tail, base -> tip; 3-6 segments)
+         -- or a single tail.png (no wave; legacy)
+Every layer is the SAME canvas size (2048x1152), already positioned in the neutral pose.
 
 Requires: Pillow, numpy.  Exit code 1 if any ERROR is reported.
 """
-import argparse, hashlib, io, json, math, os, sys
+import argparse, glob, hashlib, io, json, math, os, re, sys
 import numpy as np
 from PIL import Image
 
 LOGICAL = (640, 360)          # runner's logical canvas
 DPR = 2                       # atlas stored at 2x logical for sharp phones
-PIECES = ["body", "frontNear", "frontFar", "rearNear", "rearFar", "tail"]
-LIMBS = PIECES[1:]
-DEFAULT_ORDER = ["tail", "rearFar", "frontFar", "body", "rearNear", "frontNear"]
+VIEW_OX = 16                  # runner draws the whole cat 16 logical px to the right (room for the tail wave)
+LIMBS4 = ["frontNear", "frontFar", "rearNear", "rearFar"]
+BACK_FRONT = ["rearFar", "frontFar", "body", "rearNear", "frontNear"]
+# Anatomical joints on the 2048x1152 layout (calibrated on lateral cat skeletons, see SPEC 4)
+ANATOMY = {"tail": (530, 600), "rearNear": (585, 642), "rearFar": (600, 636),
+           "frontNear": (1450, 640), "frontFar": (1465, 648)}
+PAWS = {"frontNear": (1636, 951), "frontFar": (1326, 939), "rearNear": (429, 983), "rearFar": (772, 884)}
+HERE = os.path.dirname(os.path.abspath(__file__))
 POSES = [  # keep identical to cattail-layered-runner.js DEFAULT_POSES
     {"frontNear": -16, "frontFar": 13, "rearNear": 17, "rearFar": -12, "tail": -7, "bob": 0},
     {"frontNear": -6, "frontFar": 20, "rearNear": 9, "rearFar": -21, "tail": -3, "bob": -2},
@@ -35,10 +41,19 @@ POSES = [  # keep identical to cattail-layered-runner.js DEFAULT_POSES
     {"frontNear": -20, "frontFar": 7, "rearNear": 17, "rearFar": -3, "tail": -7, "bob": -4},
     {"frontNear": -13, "frontFar": 17, "rearNear": 12, "rearFar": -15, "tail": -2, "bob": -2},
 ]
+# Tail wave (keep identical to the runner): angle_k = gait (k==0) + amp_k * sin(phase - k*lag)
+WAVE_BASE_AMP, WAVE_TIP_AMP, WAVE_LAG = 3.0, 15.0, 0.75
 
 errors, warns = [], []
+LEGACY_OK = False
 def err(m): errors.append(m); print("ERROR:", m)
 def warn(m): warns.append(m); print("WARN: ", m)
+
+
+def wave_amps(n, wave=None):
+    if wave and "amp" in wave: return list(wave["amp"])[:n] + [wave["amp"][-1]] * max(0, n - len(wave["amp"]))
+    if n == 1: return [0.0]
+    return [WAVE_BASE_AMP + (WAVE_TIP_AMP - WAVE_BASE_AMP) * i / (n - 1) for i in range(n)]
 
 
 def chroma_key(img):
@@ -48,8 +63,7 @@ def chroma_key(img):
     bg = np.median(corners, axis=0)
     d = np.sqrt(((a - bg) ** 2).sum(-1))
     alpha = np.clip((d - 40) / 30, 0, 1) * 255
-    out = np.dstack([a, alpha]).astype(np.uint8)
-    return Image.fromarray(out, "RGBA")
+    return Image.fromarray(np.dstack([a, alpha]).astype(np.uint8), "RGBA")
 
 
 def load_layer(path, size):
@@ -87,118 +101,222 @@ def pack(items, max_w=1024, pad=4):
     return pos, (max_w, H + (-H) % 4)
 
 
-def render(variant, atlas, pose, R=1, only=None, margin=0):
-    """Reproduces the runner's canvas math. Returns {name: RGBA layer} or composite."""
+# ---------- transforms (same maths as the runner's canvas calls) ----------
+def T(x, y): return np.array([[1, 0, x], [0, 1, y], [0, 0, 1]], float)
+def S(s): return np.array([[s, 0, 0], [0, s, 0], [0, 0, 1]], float)
+def Rot(deg):
+    t = math.radians(deg); c, s = math.cos(t), math.sin(t)   # canvas rotate(): clockwise on screen
+    return np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]], float)
+def about(at, deg): return T(*at) @ Rot(deg) @ T(-at[0], -at[1])
+
+
+def angles_for(variant, pose, phase, wave_scale=1.0):
+    """Per-piece rotation (deg) for a gait pose plus a tail-wave phase."""
+    ang = {n: pose.get(n, 0) for n in LIMBS4}
+    chain = variant.get("chains", {}).get("tail")
+    if chain:
+        amps = wave_amps(len(chain), variant.get("tailWave"))
+        lag = (variant.get("tailWave") or {}).get("lag", WAVE_LAG)
+        for i, n in enumerate(chain):
+            ang[n] = (pose.get("tail", 0) if i == 0 else 0) + wave_scale * amps[i] * math.sin(phase - i * lag)
+    else:
+        ang["tail"] = pose.get("tail", 0)
+    return ang
+
+
+def piece_matrix(variant, name, ang, bob):
+    p = variant["pieces"][name]; sc = p["scale"]; (jx, jy), (ax, ay) = p["joint"], p["at"]
+    N = T(ax - jx * sc, ay - jy * sc) @ S(sc)                     # neutral placement
+    if name == "body": return T(0, bob) @ N
+    chain = variant.get("chains", {}).get("tail") or []
+    if name in chain:
+        M = np.eye(3)
+        for j in chain[:chain.index(name) + 1]:                    # rotate about every ancestor joint
+            M = M @ about(variant["pieces"][j]["at"], ang[j])
+        return T(0, bob * 0.3) @ M @ N
+    return T(0, bob * (0.3 if name == "tail" else 1)) @ about((ax, ay), ang.get(name, 0)) @ N
+
+
+def render(variant, atlas, pose, R=1, margin=0, phase=0.0, wave_scale=1.0):
     W, H = LOGICAL[0] * R + 2 * margin, LOGICAL[1] * R + 2 * margin
-    layers = {}
+    ang = angles_for(variant, pose, phase, wave_scale); bob = pose.get("bob", 0)
+    out = {}
     for name in variant["order"]:
-        if only and name not in only: continue
-        p = variant["pieces"][name]
-        x, y, w, h = p["src"]; crop = atlas.crop((x, y, x + w, y + h)).convert("RGBa")
-        sc, (jx, jy), (atx, aty) = p["scale"], p["joint"], p["at"]
-        bob = pose.get("bob", 0) * (0.3 if name == "tail" else 1)
-        th = math.radians(pose.get(name, 0) if name != "body" else 0)
-        c, s = math.cos(th), math.sin(th)
-        ox, oy = atx * R + margin, (aty + bob) * R + margin
-        # output pixel -> piece-local atlas pixel
-        A = (c / (sc * R), s / (sc * R), jx - (c * ox + s * oy) / (sc * R),
-             -s / (sc * R), c / (sc * R), jy - (-s * ox + c * oy) / (sc * R))
-        layers[name] = crop.transform((W, H), Image.AFFINE, A, resample=Image.BICUBIC).convert("RGBA")
-    return layers
-
-
-def composite(variant, layers, R, bg=(200, 225, 220, 255)):
-    W, H = next(iter(layers.values())).size
-    out = Image.new("RGBA", (W, H), bg)
-    for n in variant["order"]:
-        out.alpha_composite(layers[n])
+        x, y, w, h = variant["pieces"][name]["src"]
+        crop = atlas.crop((x, y, x + w, y + h)).convert("RGBa")
+        M = T(margin, margin) @ S(R) @ T(VIEW_OX, 0) @ piece_matrix(variant, name, ang, bob)
+        Mi = np.linalg.inv(M)
+        out[name] = crop.transform((W, H), Image.AFFINE, tuple(Mi[:2].ravel()), resample=Image.BICUBIC).convert("RGBA")
     return out
 
 
+def composite(variant, layers, bg=(200, 225, 220, 255)):
+    W, H = next(iter(layers.values())).size
+    out = Image.new("RGBA", (W, H), bg)
+    for n in variant["order"]: out.alpha_composite(layers[n])
+    return out
+
+
+def dilate(m, r=3):
+    d = m.copy()
+    for dy in (-r, 0, r):
+        for dx in (-r, 0, r): d |= np.roll(np.roll(m, dy, 0), dx, 1)
+    return d
+
+
+def pose_phase(i): return i * 2 * math.pi / len(POSES)   # one tail wave per stride cycle
+
+
 def check_poses(variant, atlas):
-    M = 120  # margin (logical px) to detect drawing outside the canvas
+    M = 120
     order = variant["order"]; body_i = order.index("body")
+    chain = variant.get("chains", {}).get("tail") or []
     lows = []
     for i, pose in enumerate(POSES):
-        L = render(variant, atlas, pose, R=1, margin=M)
+        L = render(variant, atlas, pose, R=1, margin=M, phase=pose_phase(i))
         al = {n: np.array(L[n])[:, :, 3] > 64 for n in L}
-        body = al["body"]
-        from_dil = np.zeros_like(body)
-        ys, xs = np.nonzero(body)
-        dil = body.copy()
-        for dy in (-3, 0, 3):
-            for dx in (-3, 0, 3):
-                dil |= np.roll(np.roll(body, dy, 0), dx, 1)
-        for n in LIMBS:
-            if not (al[n] & dil).any():
-                err(f"pose {i}: {n} does not touch the body (floating limb)")
-            behind = order.index(n) < body_i
-            if behind:
-                pv = variant["pieces"][n]["at"]
-                yy, xx = np.ogrid[:body.shape[0], :body.shape[1]]
-                bob = pose.get("bob", 0) * (0.3 if n == "tail" else 1)
-                near = (xx - (pv[0] + M)) ** 2 + (yy - (pv[1] + bob + M)) ** 2 < 26 ** 2
-                # a leg legitimately shows BELOW the belly line; what must not show is the joint
-                # poking out above/beside the silhouette (above the body's lower edge in that column)
-                has = body.any(0)
-                bottom = np.where(has, body.shape[0] - 1 - np.argmax(body[::-1], 0), -1)
-                above = yy < bottom[None, :]
-                exposed = int((al[n] & near & ~body & above).sum())
-                if exposed > 40:
-                    warn(f"pose {i}: {n} joint area shows outside the body ({exposed}px) — joint cap may be visible")
+        body = al["body"]; bdil = dilate(body)
+        yy, xx = np.ogrid[:body.shape[0], :body.shape[1]]
+        has = body.any(0); bottom = np.where(has, body.shape[0] - 1 - np.argmax(body[::-1], 0), -1)
+        for n in LIMBS4 + ([chain[0]] if chain else ["tail"]):
+            if not (al[n] & bdil).any(): err(f"pose {i}: {n} does not touch the body (floating)")
+            if n in LIMBS4 and order.index(n) < body_i:
+                pv = variant["pieces"][n]["at"]; bob = pose.get("bob", 0)
+                near = (xx - (pv[0] + VIEW_OX + M)) ** 2 + (yy - (pv[1] + bob + M)) ** 2 < 26 ** 2
+                exposed = int((al[n] & near & ~body & (yy < bottom[None, :])).sum())
+                if exposed > 40: warn(f"pose {i}: {n} joint area shows outside the body ({exposed}px) — joint cap may be visible")
+        for a, b in zip(chain, chain[1:]):
+            ov = int((al[b] & dilate(al[a], 2)).sum())
+            if ov == 0: err(f"pose {i}: {b} is detached from {a} (tail joint opens)")
+            elif ov < 150: warn(f"pose {i}: {a}->{b} joint overlap is thin ({ov}px); enlarge the joint cap")
         union = np.zeros_like(body)
         for a in al.values(): union |= a
         inside = union[M:M + LOGICAL[1], M:M + LOGICAL[0]].sum()
-        if union.sum() - inside > 30:
-            warn(f"pose {i}: {union.sum() - inside}px of the cat fall outside the 640x360 canvas")
+        if union.sum() - inside > 30: warn(f"pose {i}: {union.sum() - inside}px of the cat fall outside the 640x360 canvas")
         legs = np.zeros_like(body)
-        for n in ("frontNear", "frontFar", "rearNear", "rearFar"): legs |= al[n]
+        for n in LIMBS4: legs |= al[n]
         lows.append(int(np.nonzero(legs.any(1))[0].max()) - M)
     neutral = render(variant, atlas, {}, R=1, margin=M)
     legs = np.zeros_like(np.array(neutral["body"])[:, :, 3] > 64)
-    for n in ("frontNear", "frontFar", "rearNear", "rearFar"): legs |= np.array(neutral[n])[:, :, 3] > 64
+    for n in LIMBS4: legs |= np.array(neutral[n])[:, :, 3] > 64
     nlow = int(np.nonzero(legs.any(1))[0].max()) - M
     print(f"paw ground line: neutral y={nlow}, poses y={min(lows)}..{max(lows)} (logical px)")
-    if not 296 <= nlow <= 326:
-        warn(f"neutral paws end at y={nlow}; target is about 312 (wheel floor)")
-    if max(lows) > 352:
-        warn(f"a paw reaches y={max(lows)} in some pose; may sink into the wheel rim")
+    if not 296 <= nlow <= 326: warn(f"neutral paws end at y={nlow}; target is about 312 (wheel floor)")
+    if max(lows) > 352: warn(f"a paw reaches y={max(lows)} in some pose; may sink into the wheel rim")
+
+
+def check_tail_joints(variant, atlas):
+    """Rotating segments open a wedge at the outer edge of a joint unless each segment carries a
+    round joint cap. Measure that notch (morphological closing minus the tail) around every joint."""
+    from scipy import ndimage
+    chain = variant.get("chains", {}).get("tail") or []
+    if len(chain) < 2: return
+    st = ndimage.generate_binary_structure(2, 1); worst = {}
+    yy, xx = np.ogrid[:LOGICAL[1] * 2, :LOGICAL[0] * 2]
+    for i, pose in enumerate(POSES):
+        for ph in np.linspace(0, 2 * math.pi, 4, endpoint=False):
+            L = render(variant, atlas, pose, R=2, phase=ph); u = np.zeros((LOGICAL[1] * 2, LOGICAL[0] * 2), bool)
+            for n in chain: u |= np.array(L[n])[:, :, 3] > 64
+            notch = ndimage.binary_closing(u, structure=st, iterations=5) & ~u
+            ang = angles_for(variant, pose, ph)
+            for k, n in enumerate(chain[1:], start=1):
+                Mx = np.eye(3)
+                for j in chain[:k + 1]: Mx = Mx @ about(variant["pieces"][j]["at"], ang[j])
+                ax, ay = variant["pieces"][n]["at"]
+                w = S(2) @ T(VIEW_OX, pose.get("bob", 0) * 0.3) @ Mx @ np.array([ax, ay, 1])
+                px = int((notch & ((xx - w[0]) ** 2 + (yy - w[1]) ** 2 < 40 ** 2)).sum())
+                worst[n] = max(worst.get(n, 0), px)
+    for n, px in worst.items():
+        if px > 40: err(f"tail joint {n} opens a {px}px gap while waving — add a round joint cap as wide as the tail (SPEC 3)")
+        elif px > 18: warn(f"tail joint {n} shows a small {px}px notch while waving; widen its joint cap")
+
+
+def check_not_recolor(cat_dir, size, tail_names):
+    """New cats must be newly painted. Recolouring the old tabby layers keeps their exact silhouette."""
+    if LEGACY_OK: return
+    p = os.path.join(HERE, "legacy_masks.npz")
+    if not os.path.exists(p) or tuple(size) != (2048, 1152):
+        warn("legacy_masks.npz not found next to build_cat.py; recolour check skipped"); return
+    ref = np.load(p); same = []
+    def mask(n): return np.array(Image.open(os.path.join(cat_dir, "layers", n + ".png")).convert("RGBA"))[:, :, 3] > 64
+    for n in ["body"] + LIMBS4 + ["tail"]:
+        a = mask(n) if n != "tail" else np.logical_or.reduce([mask(t) for t in tail_names])
+        b = np.unpackbits(ref[n])[:a.size].reshape(a.shape).astype(bool)
+        iou = (a & b).sum() / max((a | b).sum(), 1)
+        if iou > (0.985 if n == "body" else 0.98): same.append(f"{n} {iou:.3f}")
+    if len(same) == 1 and not same[0].startswith("body"):
+        warn(f"{same[0].split()[0]} has the same silhouette as the old tabby layer; it must still be newly painted")
+    elif same:
+        err("silhouette identical to the existing tabby layers (" + ", ".join(same) + ") — "
+            "recolouring the old art is not allowed; paint new layers per SPEC 3")
+
+
+def tail_layers(cat_dir):
+    segs = []
+    while os.path.exists(os.path.join(cat_dir, "layers", f"tail{len(segs) + 1}.png")):
+        segs.append(f"tail{len(segs) + 1}")
+    if segs: return segs, True
+    return ["tail"], False
 
 
 def build(cat_dir, out_root):
     rig = json.load(open(os.path.join(cat_dir, "rig.json"), encoding="utf-8"))
     cid = rig["id"]; size = rig.get("canvas", [2048, 1152])
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", str(cid)): err(f"id '{cid}' must be lowercase letters, digits and '-'")
     if abs(size[0] / size[1] - 16 / 9) > 0.01: err("canvas must be 16:9 (e.g. 2048x1152)")
     k = LOGICAL[0] / size[0]; f = DPR * k
     pivots = rig.get("pivots", {})
-    order = rig.get("order", DEFAULT_ORDER)
-    if sorted(order) != sorted(PIECES): err(f"order must list exactly {PIECES}")
-    crops, info = {}, {}
-    for n in PIECES:
+    tails, segmented = tail_layers(cat_dir)
+    if segmented and not 3 <= len(tails) <= 6:
+        (warn if len(tails) == 2 else err)(f"tail has {len(tails)} segments; use 3-6 (4 recommended)")
+    if not segmented and not LEGACY_OK:
+        err("tail must be split into segments tail1.png ... tail4.png (SPEC 3); a single tail.png cannot wave")
+    pieces_list = ["body"] + LIMBS4 + tails
+    order = rig.get("order", tails + BACK_FRONT)
+    if sorted(order) != sorted(pieces_list): err(f"order must list exactly {pieces_list}")
+    crops, info, alphas = {}, {}, {}
+    for n in pieces_list:
         path = os.path.join(cat_dir, "layers", n + ".png")
         if not os.path.exists(path): err(f"missing layers/{n}.png"); continue
         img = load_layer(path, size)
         if img is None: continue
-        al = np.array(img)[:, :, 3]
+        al = np.array(img)[:, :, 3]; alphas[n] = al
         ys, xs = np.nonzero(al > 8)
         if not len(xs): err(f"{n}.png is empty"); continue
         x0, y0, x1, y1 = xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
         crop = img.crop((x0, y0, x1, y1))
         crops[n] = resize_premul(crop, (max(1, round(crop.width * f)), max(1, round(crop.height * f))))
         info[n] = (x0, y0, crop.width, crop.height)
-        if n != "body":
-            if n not in pivots: err(f"rig.json pivots.{n} missing"); continue
-            px, py = pivots[n]
-            oy, ox = np.nonzero(al > 64)
-            dist = float(np.sqrt(((ox - px) ** 2 + (oy - py) ** 2).min()))
-            if dist > 48: err(f"pivots.{n} {pivots[n]} is {dist:.0f}px away from the drawing in {n}.png")
-            elif dist > 2: warn(f"pivots.{n} is {dist:.0f}px off the drawing in {n}.png; put it on the joint itself")
+        if n == "body": continue
+        if n not in pivots: err(f"rig.json pivots.{n} missing"); continue
+        px, py = pivots[n]
+        oy, ox = np.nonzero(al > 64)
+        dist = float(np.sqrt(((ox - px) ** 2 + (oy - py) ** 2).min()))
+        lim_err, lim_warn = (48, 2) if LEGACY_OK else (24, 4)
+        if dist > lim_err: err(f"pivots.{n} {pivots[n]} is {dist:.0f}px away from the drawing in {n}.png — the part must be painted all the way up to its joint")
+        elif dist > lim_warn: warn(f"pivots.{n} is {dist:.0f}px off the drawing in {n}.png; put it on the joint itself")
+        anat = "tail" if n in ("tail", "tail1") else n
+        if not LEGACY_OK and anat in ANATOMY:
+            ax, ay = ANATOMY[anat]; dd = math.hypot(px - ax, py - ay)
+            if dd > 120: err(f"pivots.{n} {pivots[n]} is {dd:.0f}px from the anatomical joint {ANATOMY[anat]} (SPEC 4)")
+            elif dd > 60: warn(f"pivots.{n} is {dd:.0f}px from the anatomical joint {ANATOMY[anat]}; check against refs/02")
+        if not LEGACY_OK and n in PAWS:
+            ys2, xs2 = np.nonzero(al > 64); sel = ys2 > ys2.max() - 70
+            cx, cy = xs2[sel].mean(), ys2[sel].mean(); pd = math.hypot(cx - PAWS[n][0], cy - PAWS[n][1])
+            if pd > 90: warn(f"{n} paw is at ({cx:.0f},{cy:.0f}), {pd:.0f}px from its target {PAWS[n]} (SPEC 3)")
+    if len(crops) == len(pieces_list): check_not_recolor(cat_dir, size, tails)
     if errors: return None
-    bal = np.array(Image.open(os.path.join(cat_dir, "layers", "body.png")).convert("RGBA"))[:, :, 3]
-    for n in LIMBS:
+    bal = alphas["body"]
+    for n in LIMBS4 + tails[:1]:
         px, py = pivots[n]
         if bal[int(py), int(px)] < 64:
             err(f"pivots.{n} {pivots[n]} is outside the body silhouette — joints must sit inside the body")
+    for a, b in zip(tails, tails[1:]):   # each tail joint must sit where parent and child overlap
+        px, py = pivots[b]
+        if alphas[a][int(py), int(px)] < 64 or alphas[b][int(py), int(px)] < 64:
+            err(f"pivots.{b} {pivots[b]} must lie inside both {a}.png and {b}.png (overlapping joint cap)")
+        ov = (alphas[a] > 64) & (alphas[b] > 64)
+        if ov.sum() < 1500: warn(f"{a}/{b} overlap only {ov.sum()}px; draw a round joint cap as wide as the tail")
     if errors: return None
     bw = info["body"][2] * k
     if not 380 <= bw <= 470: warn(f"body is {bw:.0f} logical px wide; reference is ~420 (cat will look bigger/smaller)")
@@ -208,7 +326,7 @@ def build(cat_dir, out_root):
     atlas = Image.new("RGBA", (AW, AH), (0, 0, 0, 0))
     for n, (x, y) in pos.items(): atlas.alpha_composite(crops[n], (x, y))
     pieces = {}
-    for n in PIECES:
+    for n in pieces_list:
         x0, y0, w, h = info[n]; ax, ay = pos[n]; aw, ah = crops[n].size
         sc = w * k / aw
         if n == "body": joint, at = [0, 0], [x0 * k, y0 * k]
@@ -221,21 +339,32 @@ def build(cat_dir, out_root):
     h8 = hashlib.sha1(buf.getvalue()).hexdigest()[:8]
     variant = {"id": cid, "label": rig.get("label", cid), "atlas": f"assets/cats/{cid}/atlas.webp?v={h8}",
                "order": order, "pieces": pieces}
+    if segmented: variant["chains"] = {"tail": tails}
+    if "tailWave" in rig: variant["tailWave"] = rig["tailWave"]
     if "poses" in rig: variant["poses"] = rig["poses"]
 
     atlas_dec = Image.open(io.BytesIO(buf.getvalue())).convert("RGBA")
     check_poses(variant, atlas_dec)
+    check_tail_joints(variant, atlas_dec)
+    if errors: return None
 
     od = os.path.join(out_root, cid); os.makedirs(od, exist_ok=True)
     open(os.path.join(od, "atlas.webp"), "wb").write(buf.getvalue())
     json.dump(variant, open(os.path.join(od, "variant.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    # preview: neutral + 8 poses at 2x
-    tiles = [composite(variant, render(variant, atlas_dec, p, R=2), 2) for p in [{}] + POSES]
+    tiles = [composite(variant, render(variant, atlas_dec, p, R=2, phase=ph))
+             for p, ph in [({}, 0.0)] + [(p, pose_phase(i)) for i, p in enumerate(POSES)]]
     tw, th = tiles[0].size; sheet = Image.new("RGBA", (tw * 3, th * 3), "white")
     for i, t in enumerate(tiles): sheet.paste(t, ((i % 3) * tw, (i // 3) * th))
     sheet.convert("RGB").save(os.path.join(cat_dir, "preview.png"))
+    if segmented:   # tail wave strip: 8 phases at the neutral pose
+        strip = [composite(variant, render(variant, atlas_dec, {}, R=2, phase=j * math.pi / 4)).crop((0, 0, 560, 600))
+                 for j in range(8)]
+        ws = Image.new("RGB", (560 * 4, 600 * 2), "white")
+        for j, t in enumerate(strip): ws.paste(t.convert("RGB"), ((j % 4) * 560, (j // 4) * 600))
+        ws.save(os.path.join(cat_dir, "preview_tail.png"))
     print(f"atlas {AW}x{AH}, {len(buf.getvalue()) // 1024} KB -> {od}/atlas.webp")
-    print(f"preview -> {os.path.join(cat_dir, 'preview.png')} (top-left = neutral, then poses 0-7)")
+    print(f"preview -> {os.path.join(cat_dir, 'preview.png')} (top-left = neutral, then poses 0-7)"
+          + (f"; tail wave -> {os.path.join(cat_dir, 'preview_tail.png')}" if segmented else ""))
     return variant
 
 
@@ -245,8 +374,8 @@ def registry(root, default):
         p = os.path.join(root, d, "variant.json")
         if os.path.exists(p): vs[d] = json.load(open(p, encoding="utf-8"))
     if not vs: err(f"no */variant.json under {root}"); return
-    if default != "random" and default not in vs: err(f"--default {default} is not a built cat")
-    js = ("/* CATTAIL running-cat variants. Generated by tools/build_cat.py registry; do not edit by hand. */\n"
+    if default != "random" and default not in vs: err(f"--default {default} is not a built cat"); return
+    js = ("/* CATTAIL running-cat variants. Generated by tools/cattail/build_cat.py registry; do not edit by hand. */\n"
           "window.CATTAIL_CAT_VARIANTS=" + json.dumps(vs, ensure_ascii=False, separators=(",", ":")) + ";\n"
           f"window.CATTAIL_CAT_DEFAULT={json.dumps(default)};\n")
     sys.stdout.write(js)
@@ -256,8 +385,10 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("build"); b.add_argument("cat_dir"); b.add_argument("--out", required=True)
+    b.add_argument("--allow-legacy", action="store_true", help="maintenance only: rebuild the old tabby-legacy art")
     r = sub.add_parser("registry"); r.add_argument("root"); r.add_argument("--default", default="random")
     a = ap.parse_args()
+    LEGACY_OK = bool(getattr(a, "allow_legacy", False))
     if a.cmd == "build": build(a.cat_dir, a.out)
     else: registry(a.root, a.default)
     print(f"\n{len(errors)} error(s), {len(warns)} warning(s)", file=sys.stderr)
