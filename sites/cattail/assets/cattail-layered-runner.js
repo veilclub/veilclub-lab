@@ -10,6 +10,9 @@
 (function(){
 "use strict";
 const W=640,H=360,DPR=2,VIEW_OX=16;
+// Stage padding (logical px) around the 640x360 frame: the cat keeps its size and place in the
+// wheel, but a long tail or a far-reaching paw may leave the frame instead of being clipped.
+const PAD={l:160,t:120,r:60,b:20},CW=W+PAD.l+PAD.r,CH=H+PAD.t+PAD.b;
 const DEFAULT_POSES=[
  // Independent shoulder/hip angles (deg, clockwise) make the feet genuinely stride.
  {frontNear:-16,frontFar:13,rearNear:17,rearFar:-12,tail:-7,bob:0},
@@ -43,8 +46,12 @@ function initRunner(mount){
  const variant=pickVariant(mount);
  const canvas=document.createElement("canvas");
  canvas.className="ct-layered-runner";
- canvas.width=W*DPR;
- canvas.height=H*DPR;
+ canvas.width=CW*DPR;
+ canvas.height=CH*DPR;
+ canvas.style.setProperty("--pad-l",String(PAD.l/W));
+ canvas.style.setProperty("--pad-b",String(PAD.b/H));
+ canvas.style.setProperty("--stage-w",String(CW/W));
+ canvas.style.aspectRatio=CW+" / "+CH;
  canvas.setAttribute("role","img");
  const poses=(variant&&variant.poses)||DEFAULT_POSES;
  const chain=(variant&&variant.chains&&variant.chains.tail)||[];
@@ -73,7 +80,7 @@ function initRunner(mount){
   const pose=poses[frame],bob=pose.bob||0,wave=reduce.matches?0:scale;
   for(const name of variant.order){
    const p=variant.pieces[name];
-   ctx.setTransform(DPR,0,0,DPR,DPR*VIEW_OX,0);
+   ctx.setTransform(DPR,0,0,DPR,DPR*(VIEW_OX+PAD.l),DPR*PAD.t);
    const ci=chain.indexOf(name);
    if(ci>=0){
     ctx.translate(0,bob*.3);

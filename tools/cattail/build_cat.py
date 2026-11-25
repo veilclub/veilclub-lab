@@ -26,6 +26,9 @@ from PIL import Image
 LOGICAL = (640, 360)          # runner's logical canvas
 DPR = 2                       # atlas stored at 2x logical for sharp phones
 VIEW_OX = 16                  # runner draws the whole cat 16 logical px to the right (room for the tail wave)
+STAGE = (160, 120, 60, 20)    # runner stage padding (left, top, right, bottom) round the 640x360 frame
+LAYOUT_W = 2048               # layout coordinates are 2048x1152 for the 640x360 frame (x3.2)
+LAYOUT_PAD = tuple(round(v * LAYOUT_W / LOGICAL[0]) for v in STAGE)   # 512, 384, 192, 64
 LIMBS4 = ["frontNear", "frontFar", "rearNear", "rearFar"]
 BACK_FRONT = ["rearFar", "frontFar", "body", "rearNear", "frontNear"]
 # Anatomical joints on the 2048x1152 layout (calibrated on lateral cat skeletons, see SPEC 4)
@@ -183,7 +186,7 @@ def pose_phase(i): return i * 2 * math.pi / len(POSES)   # one tail wave per str
 
 
 def check_poses(variant, atlas):
-    M = 120
+    M = 240
     order = variant["order"]; body_i = order.index("body")
     chain = variant.get("chains", {}).get("tail") or []
     lows = []
@@ -206,8 +209,9 @@ def check_poses(variant, atlas):
             elif ov < 150: warn(f"pose {i}: {a}->{b} joint overlap is thin ({ov}px); enlarge the joint cap")
         union = np.zeros_like(body)
         for a in al.values(): union |= a
-        inside = union[M:M + LOGICAL[1], M:M + LOGICAL[0]].sum()
-        if union.sum() - inside > 30: warn(f"pose {i}: {union.sum() - inside}px of the cat fall outside the 640x360 canvas")
+        L_, T_, R_, B_ = STAGE
+        inside = union[M - T_:M + LOGICAL[1] + B_, M - L_:M + LOGICAL[0] + R_].sum()
+        if union.sum() - inside > 30: warn(f"pose {i}: {union.sum() - inside}px of the cat fall outside the runner stage")
         legs = np.zeros_like(body)
         for n in LIMBS4: legs |= al[n]
         lows.append(int(np.nonzero(legs.any(1))[0].max()) - M)
@@ -226,11 +230,11 @@ def check_tail_joints(variant, atlas):
     from scipy import ndimage
     chain = variant.get("chains", {}).get("tail") or []
     if len(chain) < 2: return
-    st = ndimage.generate_binary_structure(2, 1); worst = {}
-    yy, xx = np.ogrid[:LOGICAL[1] * 2, :LOGICAL[0] * 2]
+    st = ndimage.generate_binary_structure(2, 1); worst = {}; MG = 2 * max(STAGE)
+    yy, xx = np.ogrid[:LOGICAL[1] * 2 + 2 * MG, :LOGICAL[0] * 2 + 2 * MG]
     for i, pose in enumerate(POSES):
         for ph in np.linspace(0, 2 * math.pi, 4, endpoint=False):
-            L = render(variant, atlas, pose, R=2, phase=ph); u = np.zeros((LOGICAL[1] * 2, LOGICAL[0] * 2), bool)
+            L = render(variant, atlas, pose, R=2, margin=MG, phase=ph); u = np.zeros(yy.shape[:1] + xx.shape[1:], bool)
             for n in chain: u |= np.array(L[n])[:, :, 3] > 64
             notch = ndimage.binary_closing(u, structure=st, iterations=5) & ~u
             ang = angles_for(variant, pose, ph)
@@ -238,7 +242,7 @@ def check_tail_joints(variant, atlas):
                 Mx = np.eye(3)
                 for j in chain[:k + 1]: Mx = Mx @ about(variant["pieces"][j]["at"], ang[j])
                 ax, ay = variant["pieces"][n]["at"]
-                w = S(2) @ T(VIEW_OX, pose.get("bob", 0) * 0.3) @ Mx @ np.array([ax, ay, 1])
+                w = T(MG, MG) @ S(2) @ T(VIEW_OX, pose.get("bob", 0) * 0.3) @ Mx @ np.array([ax, ay, 1])
                 px = int((notch & ((xx - w[0]) ** 2 + (yy - w[1]) ** 2 < 40 ** 2)).sum())
                 worst[n] = max(worst.get(n, 0), px)
     for n, px in worst.items():
@@ -246,14 +250,16 @@ def check_tail_joints(variant, atlas):
         elif px > 18: warn(f"tail joint {n} shows a small {px}px notch while waving; widen its joint cap")
 
 
-def check_not_recolor(cat_dir, size, tail_names):
+def check_not_recolor(cat_dir, size, tail_names, origin=(0, 0)):
     """New cats must be newly painted. Recolouring the old tabby layers keeps their exact silhouette."""
     if LEGACY_OK: return
     p = os.path.join(HERE, "legacy_masks.npz")
-    if not os.path.exists(p) or tuple(size) != (2048, 1152):
+    if not os.path.exists(p):
         warn("legacy_masks.npz not found next to build_cat.py; recolour check skipped"); return
-    ref = np.load(p); same = []
-    def mask(n): return np.array(Image.open(os.path.join(cat_dir, "layers", n + ".png")).convert("RGBA"))[:, :, 3] > 64
+    ref = np.load(p); same = []; X0, Y0 = -origin[0], -origin[1]
+    def mask(n):
+        a = np.array(Image.open(os.path.join(cat_dir, "layers", n + ".png")).convert("RGBA"))[:, :, 3] > 64
+        return a[Y0:Y0 + 1152, X0:X0 + LAYOUT_W]
     for n in ["body"] + LIMBS4 + ["tail"]:
         a = mask(n) if n != "tail" else np.logical_or.reduce([mask(t) for t in tail_names])
         b = np.unpackbits(ref[n])[:a.size].reshape(a.shape).astype(bool)
@@ -277,9 +283,11 @@ def tail_layers(cat_dir):
 def build(cat_dir, out_root):
     rig = json.load(open(os.path.join(cat_dir, "rig.json"), encoding="utf-8"))
     cid = rig["id"]; size = rig.get("canvas", [2048, 1152])
+    ox, oy = rig.get("canvasOrigin", [0, 0])      # layout coordinate of image pixel (0,0); <=0 when padded
     if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", str(cid)): err(f"id '{cid}' must be lowercase letters, digits and '-'")
-    if abs(size[0] / size[1] - 16 / 9) > 0.01: err("canvas must be 16:9 (e.g. 2048x1152)")
-    k = LOGICAL[0] / size[0]; f = DPR * k
+    if ox > 0 or oy > 0 or size[0] + ox < LAYOUT_W or size[1] + oy < 1152:
+        err(f"canvas {size} with origin {[ox, oy]} must cover the 2048x1152 layout")
+    k = LOGICAL[0] / LAYOUT_W; f = DPR * k
     pivots = rig.get("pivots", {})
     tails, segmented = tail_layers(cat_dir)
     if segmented and not 3 <= len(tails) <= 6:
@@ -301,12 +309,12 @@ def build(cat_dir, out_root):
         x0, y0, x1, y1 = xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
         crop = img.crop((x0, y0, x1, y1))
         crops[n] = resize_premul(crop, (max(1, round(crop.width * f)), max(1, round(crop.height * f))))
-        info[n] = (x0, y0, crop.width, crop.height)
+        info[n] = (x0 + ox, y0 + oy, crop.width, crop.height)       # layout coordinates
         if n == "body": continue
         if n not in pivots: err(f"rig.json pivots.{n} missing"); continue
-        px, py = pivots[n]
-        oy, ox = np.nonzero(al > 64)
-        dist = float(np.sqrt(((ox - px) ** 2 + (oy - py) ** 2).min()))
+        px, py = pivots[n]; ipx, ipy = px - ox, py - oy               # image coordinates
+        sy, sx = np.nonzero(al > 64)
+        dist = float(np.sqrt(((sx - ipx) ** 2 + (sy - ipy) ** 2).min()))
         lim_err, lim_warn = (48, 2) if LEGACY_OK else (24, 4)
         if dist > lim_err: err(f"pivots.{n} {pivots[n]} is {dist:.0f}px away from the drawing in {n}.png — the part must be painted all the way up to its joint")
         elif dist > lim_warn: warn(f"pivots.{n} is {dist:.0f}px off the drawing in {n}.png; put it on the joint itself")
@@ -317,18 +325,18 @@ def build(cat_dir, out_root):
             elif dd > 60: warn(f"pivots.{n} is {dd:.0f}px from the anatomical joint {ANATOMY[anat]}; check against refs/02")
         if not LEGACY_OK and n in PAWS:
             ys2, xs2 = np.nonzero(al > 64); sel = ys2 > ys2.max() - 70
-            cx, cy = xs2[sel].mean(), ys2[sel].mean(); pd = math.hypot(cx - PAWS[n][0], cy - PAWS[n][1])
+            cx, cy = xs2[sel].mean() + ox, ys2[sel].mean() + oy; pd = math.hypot(cx - PAWS[n][0], cy - PAWS[n][1])
             if pd > 90: warn(f"{n} paw is at ({cx:.0f},{cy:.0f}), {pd:.0f}px from its target {PAWS[n]} (SPEC 3)")
-    if len(crops) == len(pieces_list): check_not_recolor(cat_dir, size, tails)
+    if len(crops) == len(pieces_list): check_not_recolor(cat_dir, size, tails, (ox, oy))
     if errors: return None
     bal = alphas["body"]
     for n in LIMBS4 + tails[:1]:
         px, py = pivots[n]
-        if bal[int(py), int(px)] < 64:
+        if bal[int(py - oy), int(px - ox)] < 64:
             err(f"pivots.{n} {pivots[n]} is outside the body silhouette — joints must sit inside the body")
     for a, b in zip(tails, tails[1:]):   # each tail joint must sit where parent and child overlap
-        px, py = pivots[b]
-        if alphas[a][int(py), int(px)] < 64 or alphas[b][int(py), int(px)] < 64:
+        px, py = pivots[b]; ipx, ipy = int(px - ox), int(py - oy)
+        if alphas[a][ipy, ipx] < 64 or alphas[b][ipy, ipx] < 64:
             err(f"pivots.{b} {pivots[b]} must lie inside both {a}.png and {b}.png (overlapping joint cap)")
         ov = (alphas[a] > 64) & (alphas[b] > 64)
         if ov.sum() < 1500: warn(f"{a}/{b} overlap only {ov.sum()}px; draw a round joint cap as wide as the tail")
@@ -366,16 +374,18 @@ def build(cat_dir, out_root):
     od = os.path.join(out_root, cid); os.makedirs(od, exist_ok=True)
     open(os.path.join(od, "atlas.webp"), "wb").write(buf.getvalue())
     json.dump(variant, open(os.path.join(od, "variant.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    tiles = [composite(variant, render(variant, atlas_dec, p, R=2, phase=ph))
+    L_, T_, R_, B_ = STAGE; MP = 2 * max(STAGE)
+    crop_box = (MP - 2 * L_, MP - 2 * T_, MP + 2 * (LOGICAL[0] + R_), MP + 2 * (LOGICAL[1] + B_))
+    tiles = [composite(variant, render(variant, atlas_dec, p, R=2, margin=MP, phase=ph)).crop(crop_box)
              for p, ph in [({}, 0.0)] + [(p, pose_phase(i)) for i, p in enumerate(POSES)]]
     tw, th = tiles[0].size; sheet = Image.new("RGBA", (tw * 3, th * 3), "white")
     for i, t in enumerate(tiles): sheet.paste(t, ((i % 3) * tw, (i // 3) * th))
     sheet.convert("RGB").save(os.path.join(cat_dir, "preview.png"))
     if segmented:   # tail wave strip: 8 phases at the neutral pose
-        strip = [composite(variant, render(variant, atlas_dec, {}, R=2, phase=j * math.pi / 4)).crop((0, 0, 560, 600))
-                 for j in range(8)]
-        ws = Image.new("RGB", (560 * 4, 600 * 2), "white")
-        for j, t in enumerate(strip): ws.paste(t.convert("RGB"), ((j % 4) * 560, (j // 4) * 600))
+        strip = [composite(variant, render(variant, atlas_dec, {}, R=2, margin=MP, phase=j * math.pi / 4))
+                 .crop((MP - 2 * L_, MP - 2 * T_, MP + 560, MP + 600)) for j in range(8)]
+        tw2, th2 = strip[0].size; ws = Image.new("RGB", (tw2 * 4, th2 * 2), "white")
+        for j, t in enumerate(strip): ws.paste(t.convert("RGB"), ((j % 4) * tw2, (j // 4) * th2))
         ws.save(os.path.join(cat_dir, "preview_tail.png"))
     print(f"atlas {AW}x{AH}, {len(buf.getvalue()) // 1024} KB -> {od}/atlas.webp")
     print(f"preview -> {os.path.join(cat_dir, 'preview.png')} (top-left = neutral, then poses 0-7)"
@@ -458,7 +468,9 @@ def split_tail(tail_img, base, n=4, overlap=14):
 
 def assemble(cat_dir):
     spec = json.load(open(os.path.join(cat_dir, "parts.json"), encoding="utf-8"))
-    cid = spec["id"]; parts = spec["parts"]; size = (2048, 1152)
+    cid = spec["id"]; parts = spec["parts"]
+    PL, PT, PR, PB = LAYOUT_PAD; size = (LAYOUT_W + PL + PR, 1152 + PT + PB)
+    def img_xy(p): return (p[0] + PL, p[1] + PT)                  # layout -> padded image coordinates
     os.makedirs(os.path.join(cat_dir, "layers"), exist_ok=True)
     aligned, scales = {}, {}
     for name, tg in TARGETS.items():
@@ -476,7 +488,7 @@ def assemble(cat_dir):
         for kk in (k1, k2):
             x, y = p[kk]
             if not (0 <= x < img.width and 0 <= y < img.height): err(f"parts.{name}.{kk} {p[kk]} is outside the image {img.size}")
-        try: Mx, sc, rot = similarity(p[k1], p[k2], tg[k1], tg[k2])
+        try: Mx, sc, rot = similarity(p[k1], p[k2], img_xy(tg[k1]), img_xy(tg[k2]))
         except ValueError as e: err(f"parts.{name}: {e}"); continue
         scales[name] = sc
         if abs(rot) > 30: warn(f"{name} had to be rotated {rot:.0f} deg to fit; draw it closer to the reference orientation")
@@ -484,7 +496,7 @@ def assemble(cat_dir):
         out = img.convert("RGBa").transform(size, Image.AFFINE, tuple(Mi[:2].ravel()), resample=Image.BICUBIC).convert("RGBA")
         if name in FEATHER:   # soften only the EDGE of the near leg round its joint (joint itself stays solid)
             from scipy import ndimage
-            r0, r1 = FEATHER[name]; jx, jy = tg["joint"]
+            r0, r1 = FEATHER[name]; jx, jy = img_xy(tg["joint"])
             a = np.array(out); edt = ndimage.distance_transform_edt(a[:, :, 3] > 64)
             yy, xx = np.ogrid[:size[1], :size[0]]; d = np.sqrt((xx - jx) ** 2 + (yy - jy) ** 2)
             near = 1 - np.clip((d - r0) / (r1 - r0), 0, 1); near = near * near * (3 - 2 * near)
@@ -498,9 +510,10 @@ def assemble(cat_dir):
         if n != "body" and not 0.7 <= sc / bs <= 1.4:
             warn(f"{n} was scaled x{sc / bs:.2f} relative to the body — its fur strokes will look {'thicker' if sc > bs else 'finer'}; draw parts at a similar size")
     b = np.array(aligned["body"])[:, :, 3] > 64
-    if b[880:].sum() > 2000: warn("body has a lot of pixels near the ground line — the body part must not include legs")
+    if b[880 + PT:].sum() > 2000: warn("body has a lot of pixels near the ground line — the body part must not include legs")
     n_seg = int(spec.get("tailSegments", 4))
-    segs, joints, L = split_tail(aligned["tail"], ANATOMY["tail"], n_seg)
+    segs, joints, L = split_tail(aligned["tail"], img_xy(ANATOMY["tail"]), n_seg)
+    joints = [(x - PL, y - PT) for x, y in joints]
     print(f"tail       length {L:.0f}px -> {n_seg} segments, joints {joints}")
     for n in ["body", "frontNear", "frontFar", "rearNear", "rearFar"]:
         aligned[n].save(os.path.join(cat_dir, "layers", n + ".png"))
@@ -508,7 +521,7 @@ def assemble(cat_dir):
     for i, sg in enumerate(segs, 1): sg.save(os.path.join(cat_dir, "layers", f"tail{i}.png"))
     pivots = {n: list(ANATOMY[n]) for n in ["frontNear", "frontFar", "rearNear", "rearFar"]}
     for i, j in enumerate(joints, 1): pivots[f"tail{i}"] = list(j)
-    rig = {"id": cid, "label": spec.get("label", cid), "canvas": list(size), "pivots": pivots}
+    rig = {"id": cid, "label": spec.get("label", cid), "canvas": list(size), "canvasOrigin": [-PL, -PT], "pivots": pivots}
     for k in ("tailWave", "poses"):
         if k in spec: rig[k] = spec[k]
     json.dump(rig, open(os.path.join(cat_dir, "rig.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)

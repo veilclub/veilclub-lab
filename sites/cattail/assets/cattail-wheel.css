@@ -69,6 +69,15 @@ body[data-ct-mode="cat"] #ct-wheel-shell{display:none!important}
  filter:drop-shadow(0 4px 2px rgba(58,49,39,.23)) saturate(.96);
  transform-origin:50% 85%;
 }
+/* Padded stage: the canvas is larger than the runner box; the inner 640x360 frame lines up with
+   the box, so the cat stays put while tail and paws may reach beyond it. */
+.ct-wheel-runner .ct-layered-runner[style*="--stage-w"]{
+ position:absolute;height:auto;object-fit:fill;
+ width:calc(var(--stage-w) * 100%);
+ left:calc(var(--pad-l) * -100%);
+ bottom:calc(var(--pad-b) * -100%);
+ transform-origin:55.8% 85.2%;
+}
 .ct-wheel-runner.running .ct-layered-runner{
  animation:ct-layered-gait .25s ease-in-out infinite alternate;
 }
