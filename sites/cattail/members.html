@@ -140,7 +140,7 @@
 const profiles=JSON.parse(document.getElementById('member-source').textContent);
 const cards=[...document.querySelectorAll('.member-card')];
 /* External portraits: keep the original embedded photo/placeholder until the new file loads. */
-const portraitFiles=["夏遠星","音也","紅豆泥臭臭","藍咎","餘煙","醺柒","米哈獅","破貓","累累","雪雪","西·札伊","鯊貓","Winnwe","奧爾古斯塔斯","呼啊啊"];
+const portraitFiles=["xia-yuan-xing","yin-ye","hong-dou-ni-chou-chou","lan-jiu","yu-yan","xun-qi","mi-ha-shi","po-mao","lei-lei","xue-xue","xi-zha-yi","sha-mao","winnwe","augustus","hu-a-a"];
 cards.forEach((card)=>{
  const id=Number(card.dataset.id),filename=portraitFiles[id];
  if(!filename)return;
