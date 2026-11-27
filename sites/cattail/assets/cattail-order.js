@@ -1,6 +1,4 @@
-/* CATTAIL illustrated order book — static client-side selection, not an online checkout.
-   Coverflow and continuous card movement adapt the interaction model from VEIL;
-   the artwork, components, content and page state are independent. */
+
 const CATTAIL_SERVICES=[
  {id:"can",name:"特級優質罐罐",group:"貓咪互動",price:30000,accent:"#d9e5d1",art:"can",
   desc:"投餵罐罐也許能增進感情，但請勿將店內貓咪餵成卡車。",note:"貓咪會不會靠近，還是得看牠當天的心情。"},
