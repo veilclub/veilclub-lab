@@ -1,5 +1,5 @@
 
-/* Cat treadmill: desktop portrait wheel + a paper menu alongside it. */
+
 .ct-wheel-shell{overflow:hidden;border:1px solid #ab8768;border-radius:19px;padding:24px clamp(14px,3.2vw,42px) 16px;background:radial-gradient(ellipse at 42% 40%,#80614d,#4c3427 78%);box-shadow:inset 0 0 0 6px #a67f5940,0 15px 35px #20110d73}
 .ct-wheel-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);gap:clamp(20px,3vw,46px);align-items:center}
 .ct-wheel-scene{position:relative;width:100%;max-width:570px;aspect-ratio:1/.99;display:grid;place-items:center;margin:0 auto;touch-action:pan-y;user-select:none;cursor:grab}
@@ -62,7 +62,7 @@ body[data-ct-mode="cat"] #ct-wheel-shell{display:none!important}
 @media(prefers-reduced-motion:reduce){.ct-wheel-label,.ct-wheel-grooves{transition:none!important}.ct-wheel-runner.running svg{animation:none}}
 
 
-/* Six separately painted image layers are composited with a native canvas. */
+
 .ct-wheel-runner{width:74%;height:42%;bottom:5%;isolation:isolate}
 .ct-wheel-runner .ct-layered-runner{
  display:block;width:100%;height:100%;object-fit:contain;
@@ -85,7 +85,7 @@ body[data-ct-mode="cat"] #ct-wheel-shell{display:none!important}
  from{transform:translateY(1px) rotate(-.3deg)}
  to{transform:translateY(-3px) rotate(.3deg)}
 }
-/* Legible, larger headings that continue to travel on the wheel's circular path. */
+
 .ct-wheel-label{
  min-width:28%;max-width:47%;padding:9px 13px;
  font-size:clamp(13px,1.24vw,16px);
