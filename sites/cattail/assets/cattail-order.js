@@ -69,35 +69,24 @@ function setPhoto(holder){
   return;
  }
  const old=holder.querySelector("img");
- if(old&&old.src===person.image)return;
- const img=document.createElement("img");img.src=person.image;img.alt=person.name+"的照片";img.loading="lazy";img.decoding="async";
+ if(old&&old.getAttribute("src")===person.image)return;
+ const img=document.createElement("img");img.src=person.image;img.alt=person.name+"的照片";img.width=720;img.height=1280;img.loading="eager";img.decoding="async";
  img.onerror=()=>{img.replaceWith(Object.assign(document.createElement("span"),{className:"ct-photo-pending",textContent:"照片待補"}))};
  holder.replaceChildren(img);
 }
 function loadPortraits(){
  if(portraitPromise)return portraitPromise;
- portraitPromise=fetch("members.html",{cache:"force-cache"})
- .then(response=>{if(!response.ok)throw Error("Photo archive unavailable");return response.text()})
- .then(html=>{
-  const doc=new DOMParser().parseFromString(html,"text/html");
-  if(!doc.getElementById("member-source"))throw Error("Photo archive is missing member-source");
-  doc.querySelectorAll(".member-card[data-id]").forEach(card=>{
-   const person=cats[Number(card.dataset.id)];if(!person)return;
-   const imgs=[...card.querySelectorAll("img.portrait-photo,img.extra-photo")].map(x=>x.getAttribute("src")).filter(Boolean);
-   person.images=imgs;person.image=imgs[0]||"";
-  });
-  refreshPhotos();
- }).catch(error=>{
-  console.warn("CATTAIL photos:",error);
-  document.querySelectorAll("[data-photo] .ct-photo-pending").forEach(el=>{el.textContent="照片待補"});
- });
+ const portraitMap={"夏遠星":"assets/members/xia-yuan-xing.webp","一十木音也":"assets/members/yin-ye.webp","紅豆泥臭臭":"assets/members/hong-dou-ni-chou-chou.webp","晷藍":"assets/members/lan-jiu.webp","餘煙":"assets/members/yu-yan.webp","醺柒":"assets/members/xun-qi.webp","米哈獅":"assets/members/mi-ha-shi.webp","破貓":"assets/members/po-mao.webp","累累":"assets/members/lei-lei.webp","雪賢":"assets/members/xue-xue.webp","西•札伊":"assets/members/xi-zha-yi.webp","長尾貓鯊":"assets/members/sha-mao.webp","Winnie":"assets/members/winnwe.webp","奧爾古斯塔斯":"assets/members/augustus.webp","呼啊啊":"assets/members/hu-a-a.webp"};
+ for(const person of cats){const src=portraitMap[person.name];if(!src)throw Error("Missing portrait: "+person.name);person.image=src;person.images=[src];}
+ portraitPromise=Promise.resolve();
+ refreshPhotos();
  return portraitPromise;
 }
 function renderBrowse(){
  const list=entries();
  stage.replaceChildren();dots.replaceChildren();
  list.forEach((entry,i)=>{
-  const card=document.createElement("button");card.type="button";card.className="ct-card";card.dataset.index=i;
+  const card=document.createElement("button");card.type="button";card.className="ct-card"+(entry.type==="cat"?" ct-cat-card":"");card.dataset.index=i;
   card.dataset.key=entry.key;card.style.setProperty("--accent",entry.accent);card.setAttribute("aria-label",entry.name);
   card.innerHTML=cardHTML(entry,i);stage.append(card);
   const dot=document.createElement("button");dot.type="button";dot.className="ct-dot";dot.dataset.dot=i;dot.setAttribute("aria-label","查看 "+entry.name);
