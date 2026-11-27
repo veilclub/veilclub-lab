@@ -1,5 +1,4 @@
-/* CATTAIL wheel — independent illustrated tabby image layers.
-   Labels travel about the wheel hub while information remains beside/above the wheel. */
+
 (function(){
 "use strict";
 const panel=document.getElementById("ct-wheel-shell");
@@ -13,7 +12,7 @@ const status=byId("ct-wheel-counter");
 const modes=window.matchMedia("(prefers-reduced-motion: reduce)");
 const number=new Intl.NumberFormat("en-US");
 const clamp=(x,a,b)=>Math.max(a,Math.min(x,b));
-// Running art is assembled from six independent, editable image layers.
+
 const catLayerController=window.CattailLayeredRunner?.(runner);
 if(!catLayerController)throw new Error("CATTAIL layer animation did not initialize");
 const setPose=catLayerController.setPose;
@@ -33,7 +32,7 @@ function paint(animate=false){
  const size=wheel.clientWidth||450,rad=size*.345;
  items.forEach((node,i)=>{
   const d=relative(i,index),theta=d*Math.PI*.31;
-  // The label rises along a circular route from the spindle to the upper rim.
+
   const x=Math.round(Math.sin(theta)*rad);
   const y=Math.round(-Math.cos(theta)*rad);
   node.style.setProperty("--wheel-x",x+"px");
