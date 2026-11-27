@@ -28,8 +28,8 @@ a{color:inherit;text-decoration:none}
 .ct-eyebrow{display:block;color:#9c7557;font-size:11px;font-weight:800;letter-spacing:.18em}
 .ct-intro h1{font-size:clamp(31px,5.2vw,58px);margin:8px 0 5px;line-height:1.2;letter-spacing:.06em}
 .ct-intro p{font-size:14px;line-height:1.9;max-width:640px;color:#785b45;margin:0}
-.ct-intro-art{position:relative;z-index:1;display:grid;place-items:center;transform:rotate(8deg)}
-.ct-intro-art svg{width:min(100%,174px);height:auto;filter:drop-shadow(0 8px 5px #89694a22)}
+.ct-intro-art{position:relative;z-index:1;display:grid;place-items:center;transform:rotate(3deg)}
+.ct-intro-art svg,.ct-intro-art img{display:block;width:min(100%,180px);height:auto;filter:drop-shadow(0 8px 6px #89694a2e)}
 .ct-section-title{margin:36px 0 18px;display:flex;align-items:end;gap:22px;justify-content:space-between;flex-wrap:wrap}
 .ct-section-title h2{margin:0;font-size:25px;line-height:1.3;color:#f7e7d5}
 .ct-section-title p{margin:3px 0 0;font-size:12px;color:#d6bcaa}
@@ -147,7 +147,7 @@ a{color:inherit;text-decoration:none}
  .ct-intro{grid-template-columns:1fr 83px;padding:25px 22px;gap:8px;min-height:170px;border-radius:15px}
  .ct-intro h1{font-size:32px}
  .ct-intro p{font-size:12px}
- .ct-intro-art svg{width:84px}
+ .ct-intro-art svg,.ct-intro-art img{width:88px}
  .ct-section-title{margin:26px 0 17px;align-items:start}
  .ct-section-title h2{font-size:22px}
  .ct-mode-tabs{width:100%}.ct-mode-tabs button{flex:1;padding:10px 9px;font-size:12px}
@@ -178,5 +178,5 @@ a{color:inherit;text-decoration:none}
  .ct-cart-line{grid-template-columns:minmax(0,1fr) auto;gap:6px}
  .ct-cart-subtotal{grid-column:1 / -1;text-align:right}
 }
-@media(max-width:370px){.ct-navlinks a:not(.ct-current):not(.ct-discord){display:none}.ct-intro{grid-template-columns:1fr 62px}.ct-intro-art svg{width:65px}}
+@media(max-width:370px){.ct-navlinks a:not(.ct-current):not(.ct-discord){display:none}.ct-intro{grid-template-columns:1fr 62px}.ct-intro-art svg,.ct-intro-art img{width:66px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
