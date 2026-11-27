@@ -9,7 +9,7 @@
 - [共用貓咪資料](./sites/cattail/assets/cattail-data.js)
 - [點餐冊互動程式](./sites/cattail/assets/cattail-order.js)
 - [點餐冊樣式](./sites/cattail/assets/cattail-order.css)
-- [原始照片資料頁](./sites/cattail/members.html)
+- [獨立成員介紹頁](./sites/cattail/members.html)
 
 名簿沿用紙本翻頁與分類書籤，現有 15 位成員；點餐冊則使用獨立的卡片滑動、抽卡、貓爪印章和點餐紙介面。
 
@@ -19,7 +19,14 @@
 - 消費清單只存在當前瀏覽器頁面，支援調整數量、計算選購小計及複製文字。
 - 入場費 50,000 Gil（含當日套餐）另計，特殊加購以櫃台確認為準。
 - 不收款、不自動送出訂單、不涉及 Supabase；此階段僅提供互動展示和消費清單。
-- 貓咪照片維持原始資料來源，點餐冊不修改、重新繪製或壓縮照片。
+- 名簿、成員介紹及點餐冊直接引用 `assets/members/` 的 15 張英文檔名 WebP；不使用舊內嵌肖像。
+
+## 貓尾草美術隔離
+
+- 暖棕、奶油白、鼠尾草綠、蜂蜜棕、柔粉；手作繪本、自然紙材及柔和暖光。
+- 四角材質使用 `sites/cattail/assets/corners/` 的生成圖層；CSS 僅負責定位、尺寸及互動。
+- 不混用水晶庭、VEIL 或其他品牌的美術、資料與素材。
+- 跑輪目前使用 `assets/cats/tabby-legacy/atlas.webp`；名稱雖有 legacy，仍是現行運行素材，勿刪除。
 
 ## 專案原則
 
